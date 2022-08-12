@@ -23,29 +23,25 @@ public class ServerListActivity extends ListActivity implements
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
-		switch (requestCode) {
-		case REQUEST_EDIT_SERVER:
+		if (requestCode == REQUEST_EDIT_SERVER) {
 			if (resultCode != RESULT_CANCELED) {
 				adapter.notifyDataSetChanged();
 			}
-			break;
 		}
 	}
 
 	public final static String EDIT_SERVER_POSITION = "edit_server_position";
 	public final static int REQUEST_EDIT_SERVER = 1;
 	private int contextSelect = 0;
-	private Button newServer, cancel;
-	private AlertDialog alert;
 	private ServerInfoAdapter adapter;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.serverlist);
 		setTitle(R.string.serverlist);
-		newServer = (Button) findViewById(R.id.newServer);
+		Button newServer = findViewById(R.id.newServer);
 		newServer.setOnClickListener(this);
-		cancel = (Button) findViewById(R.id.cancel);
+		Button cancel = findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
 		adapter = new ServerInfoAdapter(this);
 		this.setListAdapter(adapter);
@@ -98,20 +94,20 @@ public class ServerListActivity extends ListActivity implements
 	public boolean onItemLongClick(AdapterView<?> arg0, View view,
 			int position, long id) {
 		contextSelect = position;
-		alert = new AlertDialog.Builder(this).setIcon(R.drawable.smallicon)
+		AlertDialog alert = new AlertDialog.Builder(this).setIcon(R.drawable.smallicon)
 				.setTitle(R.string.editserver).setPositiveButton(
-						R.string.modify, new DialogInterface.OnClickListener() {
+						R.string.modify, new OnClickListener() {
 							public void onClick(DialogInterface dialog,
-									int whichButton) {
+												int whichButton) {
 								Intent i = new Intent(ServerListActivity.this,
 										ConnectionEditor.class);
 								i.putExtra(EDIT_SERVER_POSITION, contextSelect);
 								startActivityForResult(i, REQUEST_EDIT_SERVER);
 							}
 						}).setNegativeButton(R.string.delete,
-						new DialogInterface.OnClickListener() {
+						new OnClickListener() {
 							public void onClick(DialogInterface dialog,
-									int whichButton) {
+												int whichButton) {
 								ArrayList<ServerInfo> list = SettingsManager
 										.getServerList(ServerListActivity.this);
 								list.remove(contextSelect);
@@ -126,9 +122,10 @@ public class ServerListActivity extends ListActivity implements
 
 	private void createDefaultServerList() {
 		ArrayList<ServerInfo> list = new ArrayList<ServerInfo>();
-		list.add(new ServerInfo("pkuxkx_GBK", "pkuxkx.net", 8080, null, ""));
-		list.add(new ServerInfo("Aardwolf_UTF8", "aardwolf.org", 23, null, ""));
-		list.add(new ServerInfo("Achaea_UTF8", "achaea.com", 23, null, ""));
+		list.add(new ServerInfo("무검(십웅기)", "toox.co.kr", 8050, null, ""));
+		list.add(new ServerInfo("십웅기검하천산", "27.102.207.232", 9999, null, ""));
+		list.add(new ServerInfo("승풍파랑", "sppr.kr", 5050, null, ""));
+		list.add(new ServerInfo("넓은마을 마법의대륙", "221.146.75.32",4001,null,""));
 		SettingsManager.setServerList(this, list);
 	}
 }

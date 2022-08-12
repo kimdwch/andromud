@@ -25,8 +25,6 @@
 
 package de.mud.terminal;
 
-import java.util.Properties;
-
 /**
  * Implementation of a VT terminal emulation plus ANSI compatible.
  * <P>
@@ -108,7 +106,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 				// Shortcut for my favorite ASCII
 				if (c <= 0x7F) {
 					if (lastChar != -1)
-						putChar((char) lastChar, isWide, false);
+						putChar((char) lastChar, isWide);
 					lastChar = c;
 					isWide = false;
 				} else if (!Character.isLowSurrogate(c)
@@ -117,12 +115,12 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 						if (lastChar != -1) {
 							char nc = Precomposer
 									.precompose((char) lastChar, c);
-							putChar(nc, isWide, false);
+							putChar(nc, isWide);
 							lastChar = -1;
 						}
 					} else {
 						if (lastChar != -1)
-							putChar((char) lastChar, isWide, false);
+							putChar((char) lastChar, isWide);
 						lastChar = c;
 						if (fullwidths != null)
 							isWide = fullwidths[i] == 1;
@@ -131,7 +129,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 			}
 
 			if (lastChar != -1)
-				putChar((char) lastChar, isWide, false);
+				putChar((char) lastChar, isWide);
 
 			setCursorPosition(C, R);
 			redraw();
@@ -207,7 +205,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 		PF1 = "\u001bOP";
 		PF2 = "\u001bOQ";
 		PF3 = "\u001bOR";
-		PF4 = "\u001bOS";
+		String PF4 = "\u001bOS";
 
 		/* the 3x2 keyblock on PC keyboards */
 		Insert = new String[4];
@@ -240,10 +238,10 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 		}
 
 		/* some more VT100 keys */
-		Find = "\u001b[1~";
-		Select = "\u001b[4~";
-		Help = "\u001b[28~";
-		Do = "\u001b[29~";
+		String find = "\u001b[1~";
+		String select = "\u001b[4~";
+		String help = "\u001b[28~";
+		String aDo = "\u001b[29~";
 
 		FunctionKey = new String[21];
 		FunctionKey[0] = "";
@@ -262,8 +260,8 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 		FunctionKey[12] = "\u001b[24~";
 		FunctionKey[13] = "\u001b[25~";
 		FunctionKey[14] = "\u001b[26~";
-		FunctionKey[15] = Help;
-		FunctionKey[16] = Do;
+		FunctionKey[15] = help;
+		FunctionKey[16] = aDo;
 		FunctionKey[17] = "\u001b[31~";
 		FunctionKey[18] = "\u001b[32~";
 		FunctionKey[19] = "\u001b[33~";
@@ -278,8 +276,8 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 			FunctionKeyAlt[i] = "";
 			FunctionKeyCtrl[i] = "";
 		}
-		FunctionKeyShift[15] = Find;
-		FunctionKeyShift[16] = Select;
+		FunctionKeyShift[15] = find;
+		FunctionKeyShift[16] = select;
 
 		TabKey[0] = "\u0009";
 		TabKey[1] = "\u001bOP\u0009";
@@ -335,81 +333,6 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 		this(80, 24);
 	}
 
-	/**
-	 * Terminal is mouse-aware and requires (x,y) coordinates of on the terminal
-	 * (character coordinates) and the button clicked.
-	 * 
-	 * @param x
-	 * @param y
-	 * @param modifiers
-	 */
-	public void mousePressed(int x, int y, int modifiers) {
-		if (mouserpt == 0)
-			return;
-
-		int mods = modifiers;
-		mousebut = 3;
-		if ((mods & 16) == 16)
-			mousebut = 0;
-		if ((mods & 8) == 8)
-			mousebut = 1;
-		if ((mods & 4) == 4)
-			mousebut = 2;
-
-		int mousecode;
-		if (mouserpt == 9) /* X10 Mouse */
-			mousecode = 0x20 | mousebut;
-		else
-			/* normal xterm mouse reporting */
-			mousecode = mousebut | 0x20 | ((mods & 7) << 2);
-
-		byte b[] = new byte[6];
-
-		b[0] = 27;
-		b[1] = (byte) '[';
-		b[2] = (byte) 'M';
-		b[3] = (byte) mousecode;
-		b[4] = (byte) (0x20 + x + 1);
-		b[5] = (byte) (0x20 + y + 1);
-
-		write(b); // FIXME: writeSpecial here
-	}
-
-	/**
-	 * Terminal is mouse-aware and requires the coordinates and button of the
-	 * release.
-	 * 
-	 * @param x
-	 * @param y
-	 * @param modifiers
-	 */
-	public void mouseReleased(int x, int y, int modifiers) {
-		if (mouserpt == 0)
-			return;
-
-		/*
-		 * problem is tht modifiers still have the released button set in them.
-		 * int mods = modifiers; mousebut = 3; if ((mods & 16)==16) mousebut=0;
-		 * if ((mods & 8)==8 ) mousebut=1; if ((mods & 4)==4 ) mousebut=2;
-		 */
-
-		int mousecode;
-		if (mouserpt == 9)
-			mousecode = 0x20 + mousebut; /* same as press? appears so. */
-		else
-			mousecode = '#';
-
-		byte b[] = new byte[6];
-		b[0] = 27;
-		b[1] = (byte) '[';
-		b[2] = (byte) 'M';
-		b[3] = (byte) mousecode;
-		b[4] = (byte) (0x20 + x + 1);
-		b[5] = (byte) (0x20 + y + 1);
-		write(b); // FIXME: writeSpecial here
-		mousebut = 0;
-	}
-
 	/** we should do localecho (passed from other modules). false is default */
 	private boolean localecho = false;
 
@@ -443,84 +366,6 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 	 */
 	public void setIBMCharset(boolean ibm) {
 		useibmcharset = ibm;
-	}
-
-	/**
-	 * Override the standard key codes used by the terminal emulation.
-	 * 
-	 * @param codes
-	 *            a properties object containing key code definitions
-	 */
-	public void setKeyCodes(Properties codes) {
-		String res, prefixes[] = { "", "S", "C", "A" };
-		int i;
-
-		for (i = 0; i < 10; i++) {
-			res = codes.getProperty("NUMPAD" + i);
-			if (res != null)
-				Numpad[i] = unEscape(res);
-		}
-		for (i = 1; i < 20; i++) {
-			res = codes.getProperty("F" + i);
-			if (res != null)
-				FunctionKey[i] = unEscape(res);
-			res = codes.getProperty("SF" + i);
-			if (res != null)
-				FunctionKeyShift[i] = unEscape(res);
-			res = codes.getProperty("CF" + i);
-			if (res != null)
-				FunctionKeyCtrl[i] = unEscape(res);
-			res = codes.getProperty("AF" + i);
-			if (res != null)
-				FunctionKeyAlt[i] = unEscape(res);
-		}
-		for (i = 0; i < 4; i++) {
-			res = codes.getProperty(prefixes[i] + "PGUP");
-			if (res != null)
-				PrevScn[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "PGDOWN");
-			if (res != null)
-				NextScn[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "END");
-			if (res != null)
-				KeyEnd[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "HOME");
-			if (res != null)
-				KeyHome[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "INSERT");
-			if (res != null)
-				Insert[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "REMOVE");
-			if (res != null)
-				Remove[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "UP");
-			if (res != null)
-				KeyUp[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "DOWN");
-			if (res != null)
-				KeyDown[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "LEFT");
-			if (res != null)
-				KeyLeft[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "RIGHT");
-			if (res != null)
-				KeyRight[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "ESCAPE");
-			if (res != null)
-				Escape[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "BACKSPACE");
-			if (res != null)
-				BackSpace[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "TAB");
-			if (res != null)
-				TabKey[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "NUMPLUS");
-			if (res != null)
-				NUMPlus[i] = unEscape(res);
-			res = codes.getProperty(prefixes[i] + "NUMDECIMAL");
-			if (res != null)
-				NUMDot[i] = unEscape(res);
-		}
 	}
 
 	/**
@@ -614,7 +459,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 
 		// TODO check if character is wide
 		if (doecho)
-			putChar((char) s, false, false);
+			putChar((char) s, false);
 		return true;
 	}
 
@@ -738,7 +583,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 	 * The graphics charsets B - default ASCII A - ISO Latin 1 0 - DEC SPECIAL <
 	 * - User defined ....
 	 */
-	char gx[];
+	char[] gx;
 	char gl; // GL (left charset)
 	char gr; // GR (right charset)
 	int onegl; // single shift override for GL.
@@ -748,7 +593,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 	private final static String scoansi_acs = "Tm7k3x4u?kZl@mYjEnB\u2566DqCtAvM\u2550:\u2551N\u2557I\u2554;\u2557H\u255a0a<\u255d";
 	// array to store DEC Special -> Unicode mapping
 	// Unicode DEC Unicode name (DEC name)
-	private static char DECSPECIAL[] = { '\u0040', // 5f blank
+	private static final char[] DECSPECIAL = { '\u0040', // 5f blank
 			'\u2666', // 60 black diamond
 			'\u2592', // 61 grey square
 			'\u2409', // 62 Horizontal tab (ht) pict. for control
@@ -783,20 +628,34 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 	};
 
 	/** Strings to send on function key pressing */
-	private String Numpad[];
-	private String FunctionKey[];
-	private String FunctionKeyShift[];
-	private String FunctionKeyCtrl[];
-	private String FunctionKeyAlt[];
-	private String TabKey[];
-	private String KeyUp[], KeyDown[], KeyLeft[], KeyRight[];
-	private String KPMinus, KPComma, KPPeriod, KPEnter;
-	private String PF1, PF2, PF3, PF4;
-	private String Help, Do, Find, Select;
+	private final String[] Numpad;
+	private final String[] FunctionKey;
+	private final String[] FunctionKeyShift;
+	private final String[] FunctionKeyCtrl;
+	private final String[] FunctionKeyAlt;
+	private final String[] TabKey;
+	private final String[] KeyUp;
+	private final String[] KeyDown;
+	private final String[] KeyLeft;
+	private final String[] KeyRight;
+	private final String KPMinus;
+	private final String KPComma;
+	private final String KPPeriod;
+	private final String KPEnter;
+	private final String PF1;
+	private final String PF2;
+	private final String PF3;
 
-	private String KeyHome[], KeyEnd[], Insert[], Remove[], PrevScn[],
-			NextScn[];
-	private String Escape[], BackSpace[], NUMDot[], NUMPlus[];
+	private final String[] KeyHome;
+	private final String[] KeyEnd;
+	private final String[] Insert;
+	private final String[] Remove;
+	private final String[] PrevScn;
+	private final String[] NextScn;
+	private final String[] Escape;
+	private final String[] BackSpace;
+	private final String[] NUMDot;
+	private final String[] NUMPlus;
 
 	private String osc, dcs; /* to memorize OSC & DCS control sequence */
 
@@ -807,7 +666,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 	/** Tabulators */
 	private byte[] Tabs;
 	/** The list of integers as used by CSI */
-	private int[] DCEvars = new int[30];
+	private final int[] DCEvars = new int[30];
 	private int DCEvar;
 
 	/**
@@ -915,7 +774,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 		}
 
 		int xind;
-		String fmap[];
+		String[] fmap;
 		xind = 0;
 		fmap = FunctionKey;
 		if (shift) {
@@ -1035,197 +894,6 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 	 * public void keyReleased(KeyEvent evt) { if (debug > 1)
 	 * debug("keyReleased("+evt+")"); // ignore }
 	 */
-	/**
-	 * Handle key Typed events for the terminal, this will get all normal key
-	 * types, but no shift/alt/control/numlock.
-	 */
-	public void keyTyped(int keyCode, char keyChar, int modifiers) {
-		boolean control = (modifiers & VDUInput.KEY_CONTROL) != 0;
-		boolean shift = (modifiers & VDUInput.KEY_SHIFT) != 0;
-		boolean alt = (modifiers & VDUInput.KEY_ALT) != 0;
-
-		if (debug > 1)
-			debug("keyTyped(" + keyCode + ", " + (int) keyChar + ", "
-					+ modifiers + ")");
-
-		if (keyChar == '\t') {
-			if (shift) {
-				write(TabKey[1], false);
-			} else {
-				if (control) {
-					write(TabKey[2], false);
-				} else {
-					if (alt) {
-						write(TabKey[3], false);
-					} else {
-						write(TabKey[0], false);
-					}
-				}
-			}
-			return;
-		}
-		if (alt) {
-			write(((char) (keyChar | 0x80)));
-			return;
-		}
-
-		if (((keyCode == KEY_ENTER) || (keyChar == 10)) && !control) {
-			write('\r');
-			if (localecho)
-				putString("\r\n"); // bad hack
-			return;
-		}
-
-		if ((keyCode == 10) && !control) {
-			debug("Sending \\r");
-			write('\r');
-			return;
-		}
-
-		// FIXME: on german PC keyboards you have to use Alt-Ctrl-q to get an @,
-		// so we can't just use it here... will probably break some other VMS
-		// codes. -Marcus
-		// if(((!vms && keyChar == '2') || keyChar == '@' || keyChar == ' ')
-		// && control)
-		if (((!vms && keyChar == '2') || keyChar == ' ') && control)
-			write(0);
-
-		if (vms) {
-			if (keyChar == 127 && !control) {
-				if (shift)
-					writeSpecial(Insert[0]); // VMS shift delete = insert
-				else
-					writeSpecial(Remove[0]); // VMS delete = remove
-				return;
-			} else if (control)
-				switch (keyChar) {
-				case '0':
-					writeSpecial(Numpad[0]);
-					return;
-				case '1':
-					writeSpecial(Numpad[1]);
-					return;
-				case '2':
-					writeSpecial(Numpad[2]);
-					return;
-				case '3':
-					writeSpecial(Numpad[3]);
-					return;
-				case '4':
-					writeSpecial(Numpad[4]);
-					return;
-				case '5':
-					writeSpecial(Numpad[5]);
-					return;
-				case '6':
-					writeSpecial(Numpad[6]);
-					return;
-				case '7':
-					writeSpecial(Numpad[7]);
-					return;
-				case '8':
-					writeSpecial(Numpad[8]);
-					return;
-				case '9':
-					writeSpecial(Numpad[9]);
-					return;
-				case '.':
-					writeSpecial(KPPeriod);
-					return;
-				case '-':
-				case 31:
-					writeSpecial(KPMinus);
-					return;
-				case '+':
-					writeSpecial(KPComma);
-					return;
-				case 10:
-					writeSpecial(KPEnter);
-					return;
-				case '/':
-					writeSpecial(PF2);
-					return;
-				case '*':
-					writeSpecial(PF3);
-					return;
-					/* NUMLOCK handled in keyPressed */
-				default:
-					break;
-				}
-			/*
-			 * Now what does this do and how did it get here. -Marcus if (shift
-			 * && keyChar < 32) { write(PF1+(char)(keyChar + 64)); return; }
-			 */
-		}
-
-		// FIXME: not used?
-		// String fmap[];
-		int xind;
-		xind = 0;
-		// fmap = FunctionKey;
-		if (shift) {
-			// fmap = FunctionKeyShift;
-			xind = 1;
-		}
-		if (control) {
-			// fmap = FunctionKeyCtrl;
-			xind = 2;
-		}
-		if (alt) {
-			// fmap = FunctionKeyAlt;
-			xind = 3;
-		}
-
-		if (keyCode == KEY_ESCAPE) {
-			writeSpecial(Escape[xind]);
-			return;
-		}
-
-		if ((modifiers & VDUInput.KEY_ACTION) != 0)
-			switch (keyCode) {
-			case KEY_NUMPAD0:
-				writeSpecial(Numpad[0]);
-				return;
-			case KEY_NUMPAD1:
-				writeSpecial(Numpad[1]);
-				return;
-			case KEY_NUMPAD2:
-				writeSpecial(Numpad[2]);
-				return;
-			case KEY_NUMPAD3:
-				writeSpecial(Numpad[3]);
-				return;
-			case KEY_NUMPAD4:
-				writeSpecial(Numpad[4]);
-				return;
-			case KEY_NUMPAD5:
-				writeSpecial(Numpad[5]);
-				return;
-			case KEY_NUMPAD6:
-				writeSpecial(Numpad[6]);
-				return;
-			case KEY_NUMPAD7:
-				writeSpecial(Numpad[7]);
-				return;
-			case KEY_NUMPAD8:
-				writeSpecial(Numpad[8]);
-				return;
-			case KEY_NUMPAD9:
-				writeSpecial(Numpad[9]);
-				return;
-			case KEY_DECIMAL:
-				writeSpecial(NUMDot[xind]);
-				return;
-			case KEY_ADD:
-				writeSpecial(NUMPlus[xind]);
-				return;
-			}
-
-		if (!((keyChar == 8) || (keyChar == 127) || (keyChar == '\r') || (keyChar == '\n'))) {
-			write(keyChar);
-			return;
-		}
-	}
 
 	private void handle_dcs(String dcs) {
 		debugStr.append("DCS: ").append(dcs);
@@ -1546,7 +1214,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 		int maxr = height - 1;
 		int tm = getTopMargin();
 
-		R = (row < 0) ? 0 : row;
+		R = Math.max(row, 0);
 		C = (col < 0) ? 0 : (col >= width) ? width - 1 : col;
 
 		if (!moveoutsidemargins) {
@@ -1557,7 +1225,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 			R = maxr;
 	}
 
-	private void putChar(char c, boolean isWide, boolean doshowcursor) {
+	private void putChar(char c, boolean isWide) {
 		int rows = this.height; // statusline
 		int columns = this.width;
 
@@ -1993,8 +1661,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 				Sgr = gr;
 				Sa = attributes;
 				Sgx = new char[4];
-				for (int i = 0; i < 4; i++)
-					Sgx[i] = gx[i];
+				System.arraycopy(gx, 0, Sgx, 0, 4);
 				if (debug > 1)
 					debug("ESC 7");
 				break;
@@ -2004,8 +1671,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 				gl = Sgl;
 				gr = Sgr;
 				if (Sgx != null)
-					for (int i = 0; i < 4; i++)
-						gx[i] = Sgx[i];
+					System.arraycopy(Sgx, 0, gx, 0, 4);
 				attributes = Sa;
 				if (debug > 1)
 					debug("ESC 8");
@@ -2054,7 +1720,6 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 				break;
 			case '\\':
 				// TODO save title
-				term_state = TSTATE_DATA;
 				break;
 			default:
 				debug("ESC unknown letter: " + c + " (" + ((int) c) + ")");
@@ -2118,15 +1783,12 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 			term_state = TSTATE_DATA;
 			break;
 		case TSTATE_ESCSQUARE:
-			switch (c) {
-			case '8':
+			if (c == '8') {
 				for (int i = 0; i < columns; i++)
 					for (int j = 0; j < rows; j++)
 						putChar(i, j, 'E', 0);
-				break;
-			default:
+			} else {
 				debug("ESC # " + c + " not supported.");
-				break;
 			}
 			term_state = TSTATE_DATA;
 			break;
@@ -2161,12 +1823,10 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 				term_state = TSTATE_DCEQ;
 				break;
 			case 's': // XTERM_SAVE missing!
-				if (true || debug > 1)
-					debug("ESC [ ? " + DCEvars[0] + " s unimplemented!");
+				debug("ESC [ ? " + DCEvars[0] + " s unimplemented!");
 				break;
 			case 'r': // XTERM_RESTORE
-				if (true || debug > 1)
-					debug("ESC [ ? " + DCEvars[0] + " r");
+				debug("ESC [ ? " + DCEvars[0] + " r");
 				/* DEC Mode reset */
 				for (int i = 0; i <= DCEvar; i++) {
 					switch (DCEvars[i]) {
@@ -2315,15 +1975,11 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 			case 'n':
 				if (debug > 0)
 					debug("ESC [ ? " + DCEvars[0] + " n");
-				switch (DCEvars[0]) {
-				case 15:
-					/* printer? no printer. */
+				if (DCEvars[0] == 15) {/* printer? no printer. */
 					write((ESC) + "[?13n", false);
 					debug("ESC[5n");
-					break;
-				default:
+				} else {
 					debug("ESC [ ? " + DCEvars[0] + " n, unsupported.");
-					break;
 				}
 				break;
 			default:
@@ -2333,34 +1989,25 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 			break;
 		case TSTATE_CSI_EX:
 			term_state = TSTATE_DATA;
-			switch (c) {
-			case ESC:
+			if (c == ESC) {
 				term_state = TSTATE_ESC;
-				break;
-			default:
+			} else {
 				debug("Unknown character ESC[! character is " + (int) c);
-				break;
 			}
 			break;
 		case TSTATE_CSI_TICKS:
 			term_state = TSTATE_DATA;
-			switch (c) {
-			case 'p':
+			if (c == 'p') {
 				debug("Conformance level: " + DCEvars[0] + " (unsupported),"
 						+ DCEvars[1]);
 				if (DCEvars[0] == 61) {
 					output8bit = false;
 					break;
 				}
-				if (DCEvars[1] == 1) {
-					output8bit = false;
-				} else {
-					output8bit = true; /* 0 or 2 */
-				}
-				break;
-			default:
+				/* 0 or 2 */
+				output8bit = DCEvars[1] != 1;
+			} else {
 				debug("Unknown ESC [...  \"" + c);
-				break;
 			}
 			break;
 		case TSTATE_CSI_EQUAL:
@@ -3018,13 +2665,9 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 			}
 			break;
 		case TSTATE_TITLE:
-			switch (c) {
-			case ESC:
+			// TODO save title
+			if (c == ESC) {
 				term_state = TSTATE_ESC;
-				break;
-			default:
-				// TODO save title
-				break;
 			}
 			break;
 		default:

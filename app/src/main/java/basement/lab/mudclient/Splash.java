@@ -26,13 +26,11 @@ public class Splash extends Activity {
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		this.setContentView(R.layout.splash);
-		new Handler().postDelayed(new Runnable() {
-			public void run() {
-				Intent mainIntent = new Intent(Splash.this, MenuActivity.class);
-				logo.setAnimation(null);
-				Splash.this.startActivity(mainIntent);
-				Splash.this.finish();
-			}
+		new Handler().postDelayed(() -> {
+			Intent mainIntent = new Intent(Splash.this, MenuActivity.class);
+			logo.setAnimation(null);
+			Splash.this.startActivity(mainIntent);
+			Splash.this.finish();
 		}, SPLASH_DISPLAY_TIME);
 		RotateAnimation anim = new RotateAnimation(0, 360,
 				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
@@ -54,7 +52,7 @@ public class Splash extends Activity {
 		set.addAnimation(animation);
 		set.addAnimation(anim);
 
-		logo = (ImageView) findViewById(R.id.splashimage);
+		logo = findViewById(R.id.splashimage);
 		logo.setAnimation(set);
 	}
 }

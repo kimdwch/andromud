@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import android.app.Activity;
 import android.content.Context;
@@ -49,7 +50,7 @@ public class SettingsManager extends PreferenceActivity {
 	private static final int defaultFontSize = 11;
 
 	private static final String encoding = "encoding";
-	private static final String defaultEncoding = "UTF-8";
+	private static final String defaultEncoding = "EUC-KR";
 
 	private static final String shortcutkey = "shortcutkey";
 	private static final String defaultShortcut = "";
@@ -141,8 +142,8 @@ public class SettingsManager extends PreferenceActivity {
 	}
 
 	public static int getScreenBuffer(Context ctx) {
-		return Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(
-				ctx).getString(screenBuffer, defaultScreenBuffer + ""));
+		return Integer.parseInt(Objects.requireNonNull(PreferenceManager.getDefaultSharedPreferences(
+				ctx).getString(screenBuffer, defaultScreenBuffer + "")));
 	}
 
 	public static boolean isFullScreen(Context ctx) {
@@ -151,13 +152,13 @@ public class SettingsManager extends PreferenceActivity {
 	}
 
 	public static int getCommandHistory(Context ctx) {
-		return Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(
-				ctx).getString(cmdHistory, defaultCommandHistory + ""));
+		return Integer.parseInt(Objects.requireNonNull(PreferenceManager.getDefaultSharedPreferences(
+				ctx).getString(cmdHistory, defaultCommandHistory + "")));
 	}
 
 	public static int getFontSize(Context ctx) {
-		return Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(
-				ctx).getString(fontSize, defaultFontSize + ""));
+		return Integer.parseInt(Objects.requireNonNull(PreferenceManager.getDefaultSharedPreferences(
+				ctx).getString(fontSize, defaultFontSize + "")));
 	}
 
 	public static String getEncoding(Context ctx) {
@@ -191,8 +192,8 @@ public class SettingsManager extends PreferenceActivity {
 		private synchronized static void initialize() {
 			if (initialized)
 				return;
-			List<CharSequence> charsetIdsList = new LinkedList<CharSequence>();
-			List<CharSequence> charsetNamesList = new LinkedList<CharSequence>();
+			List<CharSequence> charsetIdsList = new LinkedList<>();
+			List<CharSequence> charsetNamesList = new LinkedList<>();
 			for (Entry<String, Charset> entry : Charset.availableCharsets()
 					.entrySet()) {
 				Charset c = entry.getValue();

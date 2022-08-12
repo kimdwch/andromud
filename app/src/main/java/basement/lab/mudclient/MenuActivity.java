@@ -8,10 +8,16 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
+import java.util.Locale;
+
+import basement.lab.mudclient.utils.Logger;
 
 public class MenuActivity extends Activity implements OnClickListener {
 
-	private Button start, setting, about, exit, colors, help;
 	private AlertDialog aboutDialog;
 
 	@Override
@@ -22,22 +28,25 @@ public class MenuActivity extends Activity implements OnClickListener {
 					WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
 		setContentView(basement.lab.mudclient.R.layout.menu);
-		start = (Button) findViewById(R.id.start);
+		Button start = findViewById(R.id.start);
 		start.setOnClickListener(this);
-		setting = (Button) findViewById(R.id.setting);
+		Button setting = findViewById(R.id.setting);
 		setting.setOnClickListener(this);
-		about = (Button) findViewById(R.id.about);
+		Button about = findViewById(R.id.about);
 		about.setOnClickListener(this);
-		help = (Button) findViewById(R.id.help);
+		Button help = findViewById(R.id.help);
 		help.setOnClickListener(this);
-		exit = (Button) findViewById(R.id.exit);
+		Button exit = findViewById(R.id.exit);
 		exit.setOnClickListener(this);
-		colors = (Button) findViewById(R.id.color);
+		Button colors = findViewById(R.id.color);
 		colors.setOnClickListener(this);
 		aboutDialog = new AlertDialog.Builder(this).setIcon(
 				R.drawable.smallicon).setTitle(R.string.about_title)
 				.setMessage(R.string.about_body).setNegativeButton(
 						R.string.cancel, null).create();
+		StringBuilder ver = new StringBuilder(getString(R.string.versionName));
+		ver.append(BuildConfig.VERSION_NAME);
+		((TextView)findViewById(R.id.version)).setText(ver);
 	}
 
 	public void onClick(View v) {

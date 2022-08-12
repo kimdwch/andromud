@@ -18,7 +18,7 @@ public class AliasAdapter extends BaseAdapter {
 
 	
 	private ArrayList<Alias> aliases;
-	private Context ctx;
+	private final Context ctx;
 
 	public AliasAdapter(Context ctx) {
 		this.ctx = ctx;
@@ -27,7 +27,7 @@ public class AliasAdapter extends BaseAdapter {
 	}
 
 	private void refreshArrayList() {
-		aliases = new ArrayList<Alias>();
+		aliases = new ArrayList<>();
 		Set<Entry<String, String>> temp = ScriptEngine.aliases.entrySet();
 		for (Entry<String, String> t : temp) {
 			aliases.add(new Alias(t.getKey(), t.getValue()));
@@ -50,7 +50,7 @@ public class AliasAdapter extends BaseAdapter {
 		LayoutInflater inflater = LayoutInflater.from(ctx);
 		View server = inflater.inflate(R.layout.aliasrow, null);
 		TextView name;
-		name = (TextView) server.findViewById(R.id.aliasname);
+		name = server.findViewById(R.id.aliasname);
 		name.setText(aliases.get(position).name);
 		return server;
 	}

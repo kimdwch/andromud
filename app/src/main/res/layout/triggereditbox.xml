@@ -1,29 +1,64 @@
-<LinearLayout android:layout_width="fill_parent"
-	android:gravity="center" android:orientation="vertical"
-	android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
-	<TextView android:text="@string/trigger_pattern"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
-		<EditText android:textSize="20sp" android:id="@+id/triggerPattern"
-			android:paddingBottom="10dp" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_weight="1" />
-		<Button android:text="@string/trigger_choose_from_screen"
-			android:id="@+id/triggerChoose" android:layout_width="wrap_content"
-			android:layout_height="wrap_content"></Button>
-	</LinearLayout>
-	<TextView android:text="@string/trigger_body"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
-	<EditText android:id="@+id/triggerBody" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:layout_weight="1"></EditText>
-	<TableLayout android:layout_width="fill_parent"
-		android:stretchColumns="*" android:layout_height="wrap_content">
-		<TableRow android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			<Button android:text="@string/save" android:id="@+id/save"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-			<Button android:text="@string/delete" android:id="@+id/delete"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-		</TableRow>
-	</TableLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/trigger_pattern" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/triggerPattern"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/triggerChoose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trigger_choose_from_screen" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/trigger_body" />
+
+    <EditText
+        android:id="@+id/triggerBody"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save" />
+
+            <Button
+                android:id="@+id/delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/delete" />
+        </TableRow>
+    </TableLayout>
 </LinearLayout>

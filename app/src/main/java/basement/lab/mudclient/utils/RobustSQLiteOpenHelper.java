@@ -32,8 +32,8 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
  *
  */
 public abstract class RobustSQLiteOpenHelper extends SQLiteOpenHelper {
-	private static List<String> mTableNames = new LinkedList<String>();
-	private static List<String> mIndexNames = new LinkedList<String>();
+	private static final List<String> mTableNames = new LinkedList<>();
+	private static final List<String> mIndexNames = new LinkedList<>();
 
 	public RobustSQLiteOpenHelper(Context context, String name,
 			CursorFactory factory, int version) {

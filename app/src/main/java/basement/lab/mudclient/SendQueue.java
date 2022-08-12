@@ -3,7 +3,7 @@ package basement.lab.mudclient;
 import java.util.LinkedList;
 
 public class SendQueue {
-	private LinkedList<Object> queueList;
+	private final LinkedList<Object> queueList;
 
 	SendQueue() {
 		queueList = new LinkedList<Object>();

@@ -132,11 +132,11 @@ public class MudTerminalActivity extends Activity implements OnClickListener {
 
 		setContentView(R.layout.main);
 		HISTORY_BUFFER_SIZE = SettingsManager.getCommandHistory(this);
-		cmd = (EditText) findViewById(R.id.cmdText);
-		container = (FrameLayout) findViewById(R.id.terminalContainer);
+		cmd = findViewById(R.id.cmdText);
+		container = findViewById(R.id.terminalContainer);
 
 		if (savedInstanceState == null) {
-			commandHistory = new ArrayList<String>();
+			commandHistory = new ArrayList<>();
 			sendData = new SendQueue();
 			terminal = new TerminalView(this);
 		} else {
@@ -149,18 +149,13 @@ public class MudTerminalActivity extends Activity implements OnClickListener {
 			sendData.enqueue(tlisten);
 			this.server = sd.server;
 			terminal = sd.terminal;
-			inputBuffer = (String) savedInstanceState.getString("INPUT_TEXT");
+			inputBuffer = savedInstanceState.getString("INPUT_TEXT");
 		}
 		container.addView(terminal);
 		cmd.setText(inputBuffer);
 		cmd.setOnKeyListener(new CommandListener());
 		terminal.setLongClickable(true);
-		terminal.setOnTouchListener(new OnTouchListener() {
-
-			public boolean onTouch(View v, MotionEvent event) {
-				return detect.onTouchEvent(event);
-			}
-		});
+		terminal.setOnTouchListener((v, event) -> detect.onTouchEvent(event));
 
 	}
 
@@ -173,17 +168,17 @@ public class MudTerminalActivity extends Activity implements OnClickListener {
 			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 					WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
-		buttonList = (TableLayout) findViewById(R.id.buttonList);
+		buttonList = findViewById(R.id.buttonList);
 		if (!SettingsManager.isUseShortcut(this)) {
 			buttonList.setVisibility(View.GONE);
 		}
 		shortcutkeys = new Button[5];
 		shortcutList = new String[5];
-		shortcutkeys[0] = (Button) findViewById(R.id.shortcut1);
-		shortcutkeys[1] = (Button) findViewById(R.id.shortcut2);
-		shortcutkeys[2] = (Button) findViewById(R.id.shortcut3);
-		shortcutkeys[3] = (Button) findViewById(R.id.shortcut4);
-		shortcutkeys[4] = (Button) findViewById(R.id.shortcut5);
+		shortcutkeys[0] = findViewById(R.id.shortcut1);
+		shortcutkeys[1] = findViewById(R.id.shortcut2);
+		shortcutkeys[2] = findViewById(R.id.shortcut3);
+		shortcutkeys[3] = findViewById(R.id.shortcut4);
+		shortcutkeys[4] = findViewById(R.id.shortcut5);
 
 		for (int i = 0; i < 5; i++) {
 			shortcutList[i] = SettingsManager.getShortcutCommand(this, i + 1);
@@ -202,14 +197,14 @@ public class MudTerminalActivity extends Activity implements OnClickListener {
 					ScriptEngine.init(server.mudfile);
 				} catch (IOException e) {
 					Toast.makeText(this,
-							"Alias File Not Found. Creating a New File.", 0)
+							"Alias File Not Found. Creating a New File.", Toast.LENGTH_SHORT)
 							.show();
 				} catch (Exception e) {
-					Toast.makeText(this, e.toString(), 0).show();
+					Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
 				}
 				connectToServer(server);
 			} else {
-				Toast.makeText(this, R.string.error_unableFindServer, 0).show();
+				Toast.makeText(this, R.string.error_unableFindServer, Toast.LENGTH_SHORT).show();
 			}
 		}
 		if (wakelock != null && SettingsManager.isKeepAwake(this)) {

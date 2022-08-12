@@ -44,8 +44,8 @@ public class ServerInfoAdapter extends BaseAdapter {
 		LayoutInflater inflater = LayoutInflater.from(ctx);
 		View server = inflater.inflate(R.layout.serverrow, null);
 		TextView nickname, host;
-		nickname = (TextView) server.findViewById(R.id.nickname);
-		host = (TextView) server.findViewById(R.id.host);
+		nickname = server.findViewById(R.id.nickname);
+		host = server.findViewById(R.id.host);
 		nickname.setText(servers.get(position).nickName);
 		host.setText(servers.get(position).IP + ":"
 				+ servers.get(position).Port);

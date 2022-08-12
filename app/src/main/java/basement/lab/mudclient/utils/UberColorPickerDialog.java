@@ -55,6 +55,8 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.Objects;
+
 /**
  * UberColorPickerDialog is a seriously enhanced version of the UberColorPickerDialog
  * class provided in the Android API Demos.<p>
@@ -65,8 +67,8 @@ import android.view.View;
  * @author Keith Wiley, kwiley@keithwiley.com, http://keithwiley.com
  */
 public class UberColorPickerDialog extends Dialog {
-	private OnColorChangedListener mListener;
-	private int mInitialColor;
+	private final OnColorChangedListener mListener;
+	private final int mInitialColor;
 
 	/**
 	 * Callback to the creator of the dialog, informing the creator of a new color and notifying that the dialog is about to dismiss.
@@ -105,7 +107,7 @@ public class UberColorPickerDialog extends Dialog {
 		};
 
 		DisplayMetrics dm = new DisplayMetrics();
-		getWindow().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		Objects.requireNonNull(getWindow()).getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int screenWidth = dm.widthPixels;
 		int screenHeight = dm.heightPixels;
 
@@ -159,57 +161,48 @@ public class UberColorPickerDialog extends Dialog {
 		private static final int TRACK_VER_VALUE_SLIDER = 31;
 
 		private static final int TEXT_SIZE = 12;
-		private static int[] TEXT_HSV_POS = new int[2];
-		private static int[] TEXT_RGB_POS = new int[2];
-		private static int[] TEXT_YUV_POS = new int[2];
-		private static int[] TEXT_HEX_POS = new int[2];
+		private static final int[] TEXT_HSV_POS = new int[2];
+		private static final int[] TEXT_RGB_POS = new int[2];
+		private static final int[] TEXT_YUV_POS = new int[2];
+		private static final int[] TEXT_HEX_POS = new int[2];
 
 		private static final float PI = 3.141592653589793f;
 
-		private int mMethod = METHOD_HS_V_PALETTE;
+		private final int mMethod = METHOD_HS_V_PALETTE;
 		private int mTracking = TRACKED_NONE;	//What object on screen is currently being tracked for movement
 
 		//Zillions of persistant Paint objecs for drawing the View
 
-		private Paint mSwatchOld, mSwatchNew;
+		private final Paint mSwatchOld;
+		private final Paint mSwatchNew;
 
 		//NEW_METHOD_WORK_NEEDED_HERE
 		//Add Paints to represent the palettes of the new method's UI controllers
-		private Paint mOvalHueSat;
+		private final Paint mOvalHueSat;
 
-		private Bitmap mVerSliderBM;
-		private Canvas mVerSliderCv;
+		private final Bitmap mVerSliderBM;
+		private final Canvas mVerSliderCv;
 
-		private Bitmap[] mHorSlidersBM = new Bitmap[3];
-		private Canvas[] mHorSlidersCv = new Canvas[3];
+		private final Paint mValDimmer;
 
-		private Paint mValDimmer;
+		private final Paint mPosMarker;
+		private final Paint mText;
 
-		//NEW_METHOD_WORK_NEEDED_HERE
-		//Add Paints to represent the icon for the new method
-		private Paint mOvalHueSatSmall;
+		private final Rect mOldSwatchRect = new Rect();
+		private final Rect mNewSwatchRect = new Rect();
+		private final Rect mVerSliderRect = new Rect();
 
-		private Paint mPosMarker;
-		private Paint mText;
-
-		private Rect mOldSwatchRect = new Rect();
-		private Rect mNewSwatchRect = new Rect();
-		private Rect mPaletteRect = new Rect();
-		private Rect mVerSliderRect = new Rect();
-
-		private int[] mSpectrumColorsRev;
+		private final int[] mSpectrumColorsRev;
 		private int mOriginalColor = 0;	//The color passed in at the beginning, which can be reverted to at any time by tapping the old swatch.
-		private float[] mHSV = new float[3];
-		private int[] mRGB = new int[3];
-		private float[] mYUV = new float[3];
+		private final float[] mHSV = new float[3];
+		private final int[] mRGB = new int[3];
+		private final float[] mYUV = new float[3];
 		private String mHexStr = "";
-		private boolean mHSVenabled = true;	//Only true if an HSV method is enabled
-		private boolean mRGBenabled = true;	//Only true if an RGB method is enabled
-		private boolean mYUVenabled = true;	//Only true if a YUV method is enabled
-		private boolean mHexenabled = true;	//Only true if an RGB method is enabled
-		private int[] mCoord = new int[3];		//For drawing slider/palette markers
+		private final boolean mRGBenabled = true;	//Only true if an RGB method is enabled
+		private final boolean mYUVenabled = true;	//Only true if a YUV method is enabled
+		private final int[] mCoord = new int[3];		//For drawing slider/palette markers
 		private int mFocusedControl = -1;	//Which control receives trackball events.
-		private OnColorChangedListener mListener;
+		private final OnColorChangedListener mListener;
 
 		/**
 		 * Ctor.
@@ -236,6 +229,7 @@ public class UberColorPickerDialog extends Dialog {
 			updateAllFromHSV();
 
 			//Setup the layout based on whether this is a portrait or landscape orientation.
+			Rect mPaletteRect = new Rect();
 			if (width <= height) {	//Portrait layout
 				SWATCH_WIDTH = (PALETTE_DIM + SLIDER_THICKNESS) / 2;
 
@@ -316,7 +310,9 @@ public class UberColorPickerDialog extends Dialog {
 			mVerSliderCv = new Canvas(mVerSliderBM);
 
 			for (int i = 0; i < 3; i++) {
+				Bitmap[] mHorSlidersBM = new Bitmap[3];
 				mHorSlidersBM[i] = Bitmap.createBitmap(PALETTE_DIM, SLIDER_THICKNESS, Bitmap.Config.RGB_565);
+				Canvas[] mHorSlidersCv = new Canvas[3];
 				mHorSlidersCv[i] = new Canvas(mHorSlidersBM[i]);
 			}
 
@@ -334,7 +330,9 @@ public class UberColorPickerDialog extends Dialog {
 			shaderA = new SweepGradient(0, 0, mSpectrumColorsRev, null);
 			shaderB = new RadialGradient(0, 0, PALETTE_DIM / 2, 0xFFFFFFFF, 0xFF000000, Shader.TileMode.CLAMP);
 			shader = new ComposeShader(shaderA, shaderB, PorterDuff.Mode.SCREEN);
-			mOvalHueSatSmall = new Paint(Paint.ANTI_ALIAS_FLAG);
+			//NEW_METHOD_WORK_NEEDED_HERE
+			//Add Paints to represent the icon for the new method
+			Paint mOvalHueSatSmall = new Paint(Paint.ANTI_ALIAS_FLAG);
 			mOvalHueSatSmall.setShader(shader);
 			mOvalHueSatSmall.setStyle(Paint.Style.FILL);
 
@@ -364,8 +362,7 @@ public class UberColorPickerDialog extends Dialog {
 			writeColorParams(canvas);
 
 			//Draw the palette and sliders (the UI)
-			if (mMethod == METHOD_HS_V_PALETTE)
-				drawHSV1Palette(canvas);
+			drawHSV1Palette(canvas);
 		}
 
 		/**
@@ -402,11 +399,10 @@ public class UberColorPickerDialog extends Dialog {
 		 * @param canvas
 		 */
 		private void writeColorParams(Canvas canvas) {
-			if (mHSVenabled) {
-				canvas.drawText("H: " + Integer.toString((int)(mHSV[0] / 360.0f * 255)), TEXT_HSV_POS[0], TEXT_HSV_POS[1] + TEXT_SIZE, mText);
-				canvas.drawText("S: " + Integer.toString((int)(mHSV[1] * 255)), TEXT_HSV_POS[0], TEXT_HSV_POS[1] + TEXT_SIZE * 2, mText);
-				canvas.drawText("V: " + Integer.toString((int)(mHSV[2] * 255)), TEXT_HSV_POS[0], TEXT_HSV_POS[1] + TEXT_SIZE * 3, mText);
-			}
+			//Only true if an HSV method is enabled
+			canvas.drawText("H: " + (int) (mHSV[0] / 360.0f * 255), TEXT_HSV_POS[0], TEXT_HSV_POS[1] + TEXT_SIZE, mText);
+			canvas.drawText("S: " + (int) (mHSV[1] * 255), TEXT_HSV_POS[0], TEXT_HSV_POS[1] + TEXT_SIZE * 2, mText);
+			canvas.drawText("V: " + (int) (mHSV[2] * 255), TEXT_HSV_POS[0], TEXT_HSV_POS[1] + TEXT_SIZE * 3, mText);
 
 			if (mRGBenabled) {
 				canvas.drawText("R: " + mRGB[0], TEXT_RGB_POS[0], TEXT_RGB_POS[1] + TEXT_SIZE, mText);
@@ -415,13 +411,13 @@ public class UberColorPickerDialog extends Dialog {
 			}
 
 			if (mYUVenabled) {
-				canvas.drawText("Y: " + Integer.toString((int)(mYUV[0] * 255)), TEXT_YUV_POS[0], TEXT_YUV_POS[1] + TEXT_SIZE, mText);
-				canvas.drawText("U: " + Integer.toString((int)((mYUV[1] + .5f) * 255)), TEXT_YUV_POS[0], TEXT_YUV_POS[1] + TEXT_SIZE * 2, mText);
-				canvas.drawText("V: " + Integer.toString((int)((mYUV[2] + .5f) * 255)), TEXT_YUV_POS[0], TEXT_YUV_POS[1] + TEXT_SIZE * 3, mText);
+				canvas.drawText("Y: " + (int) (mYUV[0] * 255), TEXT_YUV_POS[0], TEXT_YUV_POS[1] + TEXT_SIZE, mText);
+				canvas.drawText("U: " + (int) ((mYUV[1] + .5f) * 255), TEXT_YUV_POS[0], TEXT_YUV_POS[1] + TEXT_SIZE * 2, mText);
+				canvas.drawText("V: " + (int) ((mYUV[2] + .5f) * 255), TEXT_YUV_POS[0], TEXT_YUV_POS[1] + TEXT_SIZE * 3, mText);
 			}
 
-			if (mHexenabled)
-				canvas.drawText("#" + mHexStr, TEXT_HEX_POS[0], TEXT_HEX_POS[1] + TEXT_SIZE, mText);
+			//Only true if an RGB method is enabled
+			canvas.drawText("#" + mHexStr, TEXT_HEX_POS[0], TEXT_HEX_POS[1] + TEXT_SIZE, mText);
 		}
 
 		/**
@@ -552,7 +548,7 @@ public class UberColorPickerDialog extends Dialog {
 			hsv[2] = 1;
 			int col = Color.HSVToColor(hsv);
 
-			int colors[] = new int[2];
+			int[] colors = new int[2];
 			colors[0] = col;
 			colors[1] = 0xFF000000;
 			GradientDrawable gradDraw = new GradientDrawable(Orientation.TOP_BOTTOM, colors);
@@ -621,14 +617,13 @@ public class UberColorPickerDialog extends Dialog {
 		/**
 		 * Limit a value to the range [0,max].
 		 * @param n
-		 * @param max
 		 * @return
 		 */
-		private float pin(float n, float max) {
+		private float pin(float n) {
 			if (n < 0) {
 				n = 0;
-			} else if (n > max) {
-				n = max;
+			} else if (n > (float) ColorPickerView.PALETTE_DIM) {
+				n = (float) ColorPickerView.PALETTE_DIM;
 			}
 			return n;
 		}
@@ -636,13 +631,12 @@ public class UberColorPickerDialog extends Dialog {
 		/**
 		 * Limit a value to the range [min,max].
 		 * @param n
-		 * @param min
 		 * @param max
 		 * @return
 		 */
-		private float pin(float n, float min, float max) {
-			if (n < min) {
-				n = min;
+		private float pin(float n, float max) {
+			if (n < (float) -0.5) {
+				n = (float) -0.5;
 			} else if (n > max) {
 				n = max;
 			}
@@ -669,7 +663,7 @@ public class UberColorPickerDialog extends Dialog {
 		 * @param unit
 		 * @return
 		 */
-		private int interpColor(int colors[], float unit) {
+		private int interpColor(int[] colors, float unit) {
 			if (unit <= 0) {
 				return colors[0];
 			}
@@ -716,30 +710,23 @@ public class UberColorPickerDialog extends Dialog {
 			int jump = event.getHistorySize() + 1;
 
 			switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN: {
+				case MotionEvent.ACTION_DOWN:
+				case MotionEvent.ACTION_UP: {
 					}
 					break;
 				case MotionEvent.ACTION_MOVE: {
 						//NEW_METHOD_WORK_NEEDED_HERE
 						//To add a new method, replicate and extend the appropriate entry in this list,
 						//depending on whether you use 1D or 2D controllers
-						switch (mMethod) {
-							case METHOD_HS_V_PALETTE:
-								if (mFocusedControl == 0) {
-									changeHSPalette(x, y, jump);
-								}
-								else if (mFocusedControl == 1) {
-									if (y < 0)
-										changeSlider(mFocusedControl, true, jump);
-									else if (y > 0)
-										changeSlider(mFocusedControl, false, jump);
-								}
-								break;
-						}
+					if (mFocusedControl == 0) {
+						changeHSPalette(x, y, jump);
+					} else if (mFocusedControl == 1) {
+						if (y < 0)
+							changeSlider(mFocusedControl, true, jump);
+						else if (y > 0)
+							changeSlider(mFocusedControl, false, jump);
 					}
-					break;
-				case MotionEvent.ACTION_UP: {
-					}
+				}
 					break;
 			}
 
@@ -816,20 +803,18 @@ public class UberColorPickerDialog extends Dialog {
 			//It is only necessary to add an entry here for a new method if the new method uses a 1D slider.
 			//Note, some sliders are horizontal and others are vertical.
 			//They differ a bit, especially in a sign flip on the vertical axis.
-			if (mMethod == METHOD_HS_V_PALETTE) {
-				//slider *must* equal 1
+			//slider *must* equal 1
 
-				mHSV[2] += (increase ? jump : -jump) / 256.0f;
-				mHSV[2] = pinToUnit(mHSV[2]);
-				updateAllFromHSV();
-				mCoord[2] = PALETTE_DIM - (int)(mHSV[2] * PALETTE_DIM);
+			mHSV[2] += (increase ? jump : -jump) / 256.0f;
+			mHSV[2] = pinToUnit(mHSV[2]);
+			updateAllFromHSV();
+			mCoord[2] = PALETTE_DIM - (int)(mHSV[2] * PALETTE_DIM);
 
-				mSwatchNew.setColor(Color.HSVToColor(mHSV));
+			mSwatchNew.setColor(Color.HSVToColor(mHSV));
 
-				setOvalValDimmer();
+			setOvalValDimmer();
 
-				invalidate();
-			}
+			invalidate();
 		}
 
 		/**
@@ -857,9 +842,9 @@ public class UberColorPickerDialog extends Dialog {
 			mYUV[0] = a[0] * r + a[1] * g + a[2] * b;
 			mYUV[0] = pinToUnit(mYUV[0]);
 			mYUV[1] = a[5] * r + a[6] * g + a[7] * b;
-			mYUV[1] = pin(mYUV[1], -.5f, .5f);
+			mYUV[1] = pin(mYUV[1], .5f);
 			mYUV[2] = a[10] * r + a[11] * g + a[12] * b;
-			mYUV[2] = pin(mYUV[2], -.5f, .5f);
+			mYUV[2] = pin(mYUV[2], .5f);
 		}
 
 		/**
@@ -876,8 +861,7 @@ public class UberColorPickerDialog extends Dialog {
 		 */
 		private void updateAllFromHSV() {
 			//Update mRGB
-			if (mRGBenabled || mYUVenabled)
-				updateRGBfromHSV();
+			updateRGBfromHSV();
 
 			//Update mYUV
 			if (mYUVenabled)
@@ -897,7 +881,7 @@ public class UberColorPickerDialog extends Dialog {
 			float y = event.getY();
 
 			//Generate coordinates which are palette=local with the origin at the upper left of the main 2D palette
-			int y2 = (int)(pin(round(y - PALETTE_POS_Y), PALETTE_DIM));
+			int y2 = (int)(pin(round(y - PALETTE_POS_Y)));
 
 			//Generate coordinates which are palette-local with the origin at the center of the main 2D palette
 			float circlePinnedX = x - PALETTE_POS_X - PALETTE_CENTER_X;
@@ -931,7 +915,7 @@ public class UberColorPickerDialog extends Dialog {
 
 					//NEW_METHOD_WORK_NEEDED_HERE
 					//To add a new method, replicate and extend the last entry in this list
-					else if (mMethod == METHOD_HS_V_PALETTE) {
+					else {
 						if (inOvalPalette) {
 							mTracking = TRACK_HS_PALETTE;
 							mFocusedControl = 0;

@@ -1,11 +1,20 @@
-<LinearLayout android:id="@+id/LinearLayout01"
-	android:layout_width="fill_parent" android:layout_height="wrap_content"
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:gravity="center">
-	<ImageView android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:src="@drawable/light"></ImageView>
-	<TextView android:textSize="18sp" android:text="trigger pattern"
-		android:id="@+id/triggerpattern" android:textColor="@color/serverinfo"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:gravity="center"></TextView>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout01"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/light" />
+
+    <TextView
+        android:id="@+id/triggerpattern"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="trigger pattern"
+        android:textColor="@color/serverinfo"
+        android:textSize="18sp" />
 </LinearLayout>

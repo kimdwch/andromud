@@ -29,7 +29,6 @@ public class TriggerEditorActivity extends Activity implements OnClickListener {
 
 	private int requestType;
 
-	private Button save, delete, choose;
 	private EditText pattern, body;
 
 	private ArrayList<String> screenText;
@@ -39,14 +38,14 @@ public class TriggerEditorActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setTitle(R.string.trigereditor);
 		setContentView(R.layout.triggereditbox);
-		save = (Button) findViewById(R.id.save);
+		Button save = findViewById(R.id.save);
 		save.setOnClickListener(this);
-		delete = (Button) findViewById(R.id.delete);
+		Button delete = findViewById(R.id.delete);
 		delete.setOnClickListener(this);
-		choose = (Button) findViewById(R.id.triggerChoose);
+		Button choose = findViewById(R.id.triggerChoose);
 		choose.setOnClickListener(this);
-		pattern = (EditText) findViewById(R.id.triggerPattern);
-		body = (EditText) findViewById(R.id.triggerBody);
+		pattern = findViewById(R.id.triggerPattern);
+		body = findViewById(R.id.triggerBody);
 	}
 
 	@Override

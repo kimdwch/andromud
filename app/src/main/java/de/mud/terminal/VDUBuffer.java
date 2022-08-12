@@ -385,8 +385,8 @@ public class VDUBuffer {
 	 * @see #redraw
 	 */
 	public synchronized void insertLine(int l, int n, boolean scrollDown) {
-		char cbuf[][] = null;
-		int abuf[][] = null;
+		char[][] cbuf = null;
+		int[][] abuf = null;
 		int offset = 0;
 		int oldBase = screenBase;
 
@@ -401,13 +401,10 @@ public class VDUBuffer {
 							 * scrolling region).
 							 */
 			return;
-		int top = (l < topMargin ? 0
-				: (l > bottomMargin ? (bottomMargin + 1 < height ? bottomMargin + 1
-						: height - 1)
-						: topMargin));
-		int bottom = (l > bottomMargin ? height - 1
-				: (l < topMargin ? (topMargin > 0 ? topMargin - 1 : 0)
-						: bottomMargin));
+		int top = l < topMargin ? 0
+				: topMargin;
+		int bottom = l < topMargin ? topMargin > 0 ? topMargin - 1 : 0
+						: bottomMargin;
 
 		if (scrollDown) {
 			if (n > (bottom - top))
@@ -784,9 +781,9 @@ public class VDUBuffer {
 		if (amount < height)
 			amount = height;
 		if (amount < maxBufSize) {
-			char cbuf[][] = new char[amount][width];
-			int abuf[][] = new int[amount][width];
-			int copyStart = bufSize - amount < 0 ? 0 : bufSize - amount;
+			char[][] cbuf = new char[amount][width];
+			int[][] abuf = new int[amount][width];
+			int copyStart = Math.max(bufSize - amount, 0);
 			int copyCount = bufSize - amount < 0 ? bufSize : amount;
 			if (charArray != null)
 				System.arraycopy(charArray, copyStart, cbuf, 0, copyCount);
@@ -832,8 +829,8 @@ public class VDUBuffer {
 	 *            of the screen
 	 */
 	public void setScreenSize(int w, int h, boolean broadcast) {
-		char cbuf[][];
-		int abuf[][];
+		char[][] cbuf;
+		int[][] abuf;
 		int maxSize = bufSize;
 
 		if (w < 1 || h < 1)
@@ -871,10 +868,9 @@ public class VDUBuffer {
 		if (charArray != null && charAttributes != null) {
 			for (int i = 0; i < maxSize && charArray[i] != null; i++) {
 				rowLength = charArray[i].length;
-				System.arraycopy(charArray[i], 0, cbuf[i], 0, w < rowLength ? w
-						: rowLength);
+				System.arraycopy(charArray[i], 0, cbuf[i], 0, Math.min(w, rowLength));
 				System.arraycopy(charAttributes[i], 0, abuf[i], 0,
-						w < rowLength ? w : rowLength);
+						Math.min(w, rowLength));
 			}
 		}
 

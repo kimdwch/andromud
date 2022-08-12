@@ -112,19 +112,15 @@ public class TelnetConnectionThread implements Runnable {
 	// option
 	protected static final int TELNET_OPTION_EXTOP = 255; // Extended-options-list
 
-	private Socket skt;
-	private InputStream inStream;
-	private OutputStream outStream;
-	private SendQueue sendData;
+	private final SendQueue sendData;
 
-	private String LeftOvers;
+	private final String LeftOvers;
 
-	private ServerInfo server;
-	private CharsetDecoder decoder;
-	private Charset charset;
-	private String encodingDisplayName;
+	private final ServerInfo server;
+	private final CharsetDecoder decoder;
+	private final String encodingDisplayName;
 	final private WifiLock mWifiLock;
-	private boolean mLockingWifi;
+	private final boolean mLockingWifi;
 	private boolean usePostLogin = false;
 
 	private static final String TAG = "mudclient.telnet.handler";
@@ -141,7 +137,7 @@ public class TelnetConnectionThread implements Runnable {
 		mWifiLock = wm.createWifiLock(TAG);
 		mLockingWifi = SettingsManager.isKeepWifi(ctx);
 
-		charset = Charset.forName(SettingsManager.getEncoding(ctx));
+		Charset charset = Charset.forName(SettingsManager.getEncoding(ctx));
 		encodingDisplayName = charset.displayName();
 		decoder = charset.newDecoder();
 		decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
@@ -176,10 +172,10 @@ public class TelnetConnectionThread implements Runnable {
 		try {
 			sendMessageText("Establishing Connection to: " + server.IP + ":"
 					+ server.Port + EOL);
-			skt = new Socket(server.IP, server.Port);
+			Socket skt = new Socket(server.IP, server.Port);
 			skt.setSoTimeout(50);
-			inStream = skt.getInputStream();
-			outStream = skt.getOutputStream();
+			InputStream inStream = skt.getInputStream();
+			OutputStream outStream = skt.getOutputStream();
 			sendMessageText("Connected: \r\n");
 			if (usePostLogin) {
 				sendData.enqueue(server.postLogin);
@@ -256,84 +252,71 @@ public class TelnetConnectionThread implements Runnable {
 	}
 
 	private void parseBuffer(char[] dataBuffer, int bufferSize) {
-		String Formatted = "";
+		StringBuilder Formatted = new StringBuilder();
 		char[] buffer = new char[bufferSize + LeftOvers.length()];
 
 		for (int x = 0; x < LeftOvers.length(); x++) {
-			buffer[x] = (char) LeftOvers.charAt(x);
+			buffer[x] = LeftOvers.charAt(x);
 		}
 
 		for (int x = LeftOvers.length(); x < LeftOvers.length() + bufferSize; x++) {
-			buffer[x] = (char) dataBuffer[x - LeftOvers.length()];
+			buffer[x] = dataBuffer[x - LeftOvers.length()];
 		}
 		bufferSize = bufferSize + LeftOvers.length();
 
 		for (int x = 0; x < bufferSize; x++) {
-			switch (buffer[x]) {
-			case TELNET_IAC: {
+			if (buffer[x] == TELNET_IAC) {
 				if (x + 1 < bufferSize) {
 					x++;
 					switch (buffer[x]) {
-					case TELNET_WILL: {
-						if (x + 1 < bufferSize) {
-							x++;
-							switch (buffer[x]) {
-							case TELNET_OPTION_EOR:
-								sendData.enqueue((char) TELNET_IAC
-										+ (char) TELNET_DONT
-										+ (char) TELNET_OPTION_EOR);
-								break;
-							default:
-								break;
+						case TELNET_WILL: {
+							if (x + 1 < bufferSize) {
+								x++;
+								if (buffer[x] == TELNET_OPTION_EOR) {
+									sendData.enqueue((char) TELNET_IAC
+											+ (char) TELNET_DONT
+											+ (char) TELNET_OPTION_EOR);
+								}
 							}
+							break;
 						}
-						break;
-					}
-					case TELNET_DONT: {
-						if (x + 1 < bufferSize) {
-							x++;
-							switch (buffer[x]) {
-							case TELNET_OPTION_EOR:
-								sendData.enqueue("" + (char) TELNET_IAC
-										+ (char) TELNET_DONT
-										+ (char) TELNET_OPTION_EOR);
-								break;
-							default:
-								break;
+						case TELNET_DONT: {
+							if (x + 1 < bufferSize) {
+								x++;
+								if (buffer[x] == TELNET_OPTION_EOR) {
+									sendData.enqueue("" + (char) TELNET_IAC
+											+ (char) TELNET_DONT
+											+ (char) TELNET_OPTION_EOR);
+								}
 							}
+							break;
 						}
-						break;
-					}
-					case TELNET_SB: {
-						for (x += 1; x < bufferSize; x++) {
-							if (buffer[x] == TELNET_IAC) {
-								if (buffer[x] + 1 < bufferSize) {
-									x++;
-									if (buffer[x] == TELNET_SE) {
-										break;
+						case TELNET_SB: {
+							for (x += 1; x < bufferSize; x++) {
+								if (buffer[x] == TELNET_IAC) {
+									if (buffer[x] + 1 < bufferSize) {
+										x++;
+										if (buffer[x] == TELNET_SE) {
+											break;
+										}
 									}
 								}
 							}
+							break;
 						}
-						break;
-					}
-					default:
-						if (x + 1 < bufferSize) {
-							x++;
-						}
-						break;
+						default:
+							if (x + 1 < bufferSize) {
+								x++;
+							}
+							break;
 					}
 				}
-				break;
-			}
-			default:
-				Formatted += buffer[x];
-				break;
+			} else {
+				Formatted.append(buffer[x]);
 			}
 		}
 		if (Formatted.length() > 0) {
-			sendMessageText(Formatted);
-			Formatted = "";
+			sendMessageText(Formatted.toString());
 		}
 	}
 
@@ -349,6 +332,6 @@ public class TelnetConnectionThread implements Runnable {
 	private TelnetThreadListener DataListener;
 
 	public interface TelnetThreadListener {
-		public void dataReady(Message m);
+		void dataReady(Message m);
 	}
 }

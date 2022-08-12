@@ -19,7 +19,6 @@ import basement.lab.mudclient.utils.TriggerAdapter;
 public class TriggerListActivity extends ListActivity implements
 		OnClickListener, OnItemClickListener {
 
-	private Button add, finish;
 	private TriggerAdapter adapter;
 	public final static String SCREEN_TEXT = "B.L.M.SCREEN_TEXT";
 	private ArrayList<String> screenText;
@@ -29,9 +28,9 @@ public class TriggerListActivity extends ListActivity implements
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.triggerlist);
 		setTitle(R.string.trigereditor);
-		add = (Button) findViewById(R.id.add);
+		Button add = findViewById(R.id.add);
 		add.setOnClickListener(this);
-		finish = (Button) findViewById(R.id.finish);
+		Button finish = findViewById(R.id.finish);
 		finish.setOnClickListener(this);
 	}
 

@@ -1,3 +1,6 @@
-<TextView android:text="screen text" android:id="@+id/screen_text"
-	android:textSize="19sp" android:layout_width="wrap_content"
-	android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android"></TextView>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/screen_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="screen text"
+    android:textSize="19sp" />

@@ -32,8 +32,6 @@ public class TerminalView extends View implements VDUDisplay {
 	private final static String TAG = "mudclient.TerminalView";
 	public static final long VIBRATE_DURATION = 30;
 
-	private int mColorScheme;
-
 	public Integer[] color;
 
 	public int defaultFg = HostDatabase.DEFAULT_FG_COLOR;
@@ -41,24 +39,21 @@ public class TerminalView extends View implements VDUDisplay {
 
 	public vt320 buffer;
 
-	private Context ctx;
+	private final Context ctx;
 	private int row = 30, column = 90;
-	private boolean forcedSize = false;
 	private Bitmap bitmap;
 	public Paint defaultPaint, paint;
 	public int charWidth = -1;
 	public int charHeight = -1;
 	private int charTop = -1;
-	private float fontSize = -1;
 	private final List<String> localOutput;
-	private Canvas canvas = new Canvas();
+	private final Canvas canvas = new Canvas();
 	private boolean fullRedraw = false;
 
-	private String logPath;
 	private PrintWriter pw;
 	private boolean isLogging = false;
-	private boolean beepVibrate = false;
-	private Vibrator vibrator;
+	private final boolean beepVibrate;
+	private final Vibrator vibrator;
 
 	public TerminalView(Context context) {
 		super(context);
@@ -72,7 +67,7 @@ public class TerminalView extends View implements VDUDisplay {
 		defaultPaint.setTypeface(Typeface.MONOSPACE);
 		defaultPaint.setStyle(Style.FILL);
 		paint = new Paint();
-		localOutput = new LinkedList<String>();
+		localOutput = new LinkedList<>();
 		buffer = new vt320(column, row) {
 			@Override
 			public void write(int b) {
@@ -229,6 +224,7 @@ public class TerminalView extends View implements VDUDisplay {
 		// Something has gone wrong with our layout; we're 0 width or height!
 		if (width <= 0 || height <= 0)
 			return;
+		boolean forcedSize = false;
 		if (!forcedSize) {
 			int newColumns, newRows;
 
@@ -276,10 +272,10 @@ public class TerminalView extends View implements VDUDisplay {
 		}
 
 		synchronized (localOutput) {
-			((vt320) buffer).reset();
+			buffer.reset();
 
 			for (String line : localOutput)
-				((vt320) buffer).putString(line);
+				buffer.putString(line);
 		}
 		// force full redraw with new buffer size
 		fullRedraw = true;
@@ -288,7 +284,7 @@ public class TerminalView extends View implements VDUDisplay {
 
 	public void resetColors() {
 		HostDatabase db = new HostDatabase(ctx);
-		mColorScheme = HostDatabase.DEFAULT_COLOR_SCHEME;
+		int mColorScheme = HostDatabase.DEFAULT_COLOR_SCHEME;
 		color = db.getColorsForScheme(mColorScheme);
 		int[] mDefaultColors = db.getDefaultColorsForScheme(mColorScheme);
 		defaultFg = mDefaultColors[0];
@@ -298,15 +294,6 @@ public class TerminalView extends View implements VDUDisplay {
 	public void setColor(int index, int red, int green, int blue) {
 		if (index < color.length && index >= 16)
 			color[index] = 0xff000000 | red << 16 | green << 8 | blue;
-	}
-
-	public void setVDUBuffer(VDUBuffer buffer) {
-		this.buffer = (vt320) buffer;
-		redraw();
-	}
-
-	public VDUBuffer getVDUBuffer() {
-		return buffer;
 	}
 
 	public void updateScrollBar() {
@@ -327,7 +314,6 @@ public class TerminalView extends View implements VDUDisplay {
 		if (size <= 0.0)
 			return;
 		defaultPaint.setTextSize(size);
-		fontSize = size;
 		// read new metrics to get exact pixel dimensions
 		FontMetrics fm = defaultPaint.getFontMetrics();
 		charTop = (int) Math.ceil(fm.top);
@@ -360,7 +346,6 @@ public class TerminalView extends View implements VDUDisplay {
 	}
 
 	public void requestLog(String filepath, boolean start) {
-		this.logPath = filepath;
 		if (start) {
 			try {
 				pw = new PrintWriter(new FileOutputStream(filepath, true));

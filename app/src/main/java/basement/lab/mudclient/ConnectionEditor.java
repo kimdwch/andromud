@@ -36,25 +36,24 @@ public class ConnectionEditor extends Activity implements
 
 	private int position = 0;
 	private EditText NameEdit, HostEdit, PortEdit, filepath, postLogin;
-	private Button saveButton, browse;
 	private ArrayList<ServerInfo> list;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.connect);
 		setTitle(R.string.enterserverinfo);
-		saveButton = (Button) findViewById(R.id.SaveButton);
-		NameEdit = (EditText) findViewById(R.id.NameValue);
-		HostEdit = (EditText) findViewById(R.id.HostValue);
-		PortEdit = (EditText) findViewById(R.id.PortValue);
-		postLogin = (EditText) findViewById(R.id.postLoginValue);
+		Button saveButton = findViewById(R.id.SaveButton);
+		NameEdit = findViewById(R.id.NameValue);
+		HostEdit = findViewById(R.id.HostValue);
+		PortEdit = findViewById(R.id.PortValue);
+		postLogin = findViewById(R.id.postLoginValue);
 		if (SettingsManager.isPostLoginAsPassword(this)) {
 			postLogin.setInputType(InputType.TYPE_CLASS_TEXT
 					| InputType.TYPE_TEXT_VARIATION_PASSWORD);
 		}
-		browse = (Button) findViewById(R.id.browse);
+		Button browse = findViewById(R.id.browse);
 		browse.setOnClickListener(this);
-		filepath = (EditText) findViewById(R.id.filepath);
+		filepath = findViewById(R.id.filepath);
 		saveButton.setOnClickListener(this);
 		Intent i = getIntent();
 		position = i.getIntExtra(ServerListActivity.EDIT_SERVER_POSITION, -1);
@@ -67,9 +66,9 @@ public class ConnectionEditor extends Activity implements
 			postLogin.setText(list.get(position).postLogin);
 			saveButton.setText(R.string.save);
 		} else {
-			NameEdit.setText("Mud");
+			NameEdit.setHint("Mud");
 			HostEdit.setText("");
-			PortEdit.setText("80");
+			PortEdit.setHint("80");
 			filepath.setText("");
 			postLogin.setText("");
 			saveButton.setText(R.string.add);
@@ -105,7 +104,7 @@ public class ConnectionEditor extends Activity implements
 		case R.id.SaveButton:
 			if (position == -1) {
 				list.add(new ServerInfo(NameEdit.getText().toString(), HostEdit
-						.getText().toString(), Integer.valueOf(PortEdit
+						.getText().toString(), Integer.parseInt(PortEdit
 						.getText().toString()), filepath.getText().toString(), postLogin.getText()
 						.toString()));
 			} else {
@@ -122,7 +121,7 @@ public class ConnectionEditor extends Activity implements
 							+ list.get(position).IP + ".txt";
 				}
 				try {
-					list.get(position).Port = Integer.valueOf(PortEdit
+					list.get(position).Port = Integer.parseInt(PortEdit
 							.getText().toString());
 				} catch (NumberFormatException e) {
 					Toast.makeText(this, R.string.portmustbenumber,
@@ -148,7 +147,7 @@ public class ConnectionEditor extends Activity implements
 			return;
 		}
 
-		List<String> names = new LinkedList<String>();
+		List<String> names = new LinkedList<>();
 		{
 			File[] files = sdcard.listFiles();
 			if (files != null) {
@@ -165,11 +164,9 @@ public class ConnectionEditor extends Activity implements
 		Log.d(TAG, names.toString());
 		// prompt user to select any file from the sdcard root
 		new AlertDialog.Builder(this).setTitle(R.string.mudfile).setItems(
-				namesList, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface arg0, int arg1) {
-						String name = namesList[arg1];
-						setFile(new File(sdcard, name));
-					}
+				namesList, (arg0, arg1) -> {
+					String name = namesList[arg1];
+					setFile(new File(sdcard, name));
 				}).setNegativeButton(android.R.string.cancel, null).create()
 				.show();
 	}
@@ -179,8 +176,7 @@ public class ConnectionEditor extends Activity implements
 			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
-		switch (requestCode) {
-		case REQUEST_CODE_PICK_FILE:
+		if (requestCode == REQUEST_CODE_PICK_FILE) {
 			if (resultCode == RESULT_OK && intent != null) {
 				Uri uri = intent.getData();
 				try {
@@ -195,7 +191,6 @@ public class ConnectionEditor extends Activity implements
 					Log.e(TAG, "Couldn't read from picked file", e);
 				}
 			}
-			break;
 		}
 	}
 

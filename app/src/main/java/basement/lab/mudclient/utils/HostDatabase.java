@@ -12,7 +12,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 	private final static int DB_VERSION = 1;
 	private final static String DB_NAME = "colors";
 
-	private Object dbLock;
+	private final Object dbLock;
 
 	public HostDatabase(Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
@@ -88,7 +88,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper {
 					null, null);
 
 			while (c.moveToNext()) {
-				colors[c.getInt(0)] = new Integer(c.getInt(1));
+				colors[c.getInt(0)] = c.getInt(1);
 			}
 
 			c.close();

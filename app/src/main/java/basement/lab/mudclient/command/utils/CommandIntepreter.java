@@ -19,18 +19,16 @@ public class CommandIntepreter {
 			OutputStream os) throws IOException {
 		HashMap<String, String> aliases = ScriptEngine.aliases;
 		String[] cmdGroup = cmd.split(";");
-		int cmdCount = cmdGroup.length;
-		for (int i = 0; i < cmdCount; i++) {
-			debug(cmdGroup[i]);
-			String aliasCmd = aliases.get(cmdGroup[i]);
+		for (String s : cmdGroup) {
+			debug(s);
+			String aliasCmd = aliases.get(s);
 			if (aliasCmd != null) {
 				String[] aCmds = aliasCmd.split(";");
-				int aliasCmdCount = aCmds.length;
-				for (int j = 0; j < aliasCmdCount; j++) {
-					sendSimpleCommand(encoding, aCmds[j], os);
+				for (String aCmd : aCmds) {
+					sendSimpleCommand(encoding, aCmd, os);
 				}
 			} else {
-				sendSimpleCommand(encoding, cmdGroup[i], os);
+				sendSimpleCommand(encoding, s, os);
 			}
 		}
 	}
@@ -39,24 +37,21 @@ public class CommandIntepreter {
 			OutputStream os) throws IOException {
 		if (cmd == null) {
 			return;
-		} else if (!cmd.startsWith("#")) {
+		}
+		if (!cmd.startsWith("#")) {
 			os.write((cmd + "\r\n").getBytes(encoding));
 			os.flush();
 		} else if (cmd.startsWith("#wa")) {
 			try {
 				int time = Integer.parseInt(cmd.substring(3).trim());
 				Thread.sleep(time);
-			} catch (NumberFormatException e) {
-				return;
+			} catch (NumberFormatException ignored) {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-				return;
 			}
 		} else {
 			int firstSpace = cmd.indexOf(' ');
-			if (firstSpace == -1)
-				return;
-			else {
+			if (firstSpace != -1) {
 				try {
 					int repeatTime = Integer.parseInt(cmd.substring(1,
 							firstSpace));
@@ -64,8 +59,7 @@ public class CommandIntepreter {
 					for (int i = 0; i < repeatTime; i++) {
 						sendSimpleCommand(encoding, cmdBody, os);
 					}
-				} catch (NumberFormatException e) {
-					return;
+				} catch (NumberFormatException ignored) {
 				}
 			}
 		}

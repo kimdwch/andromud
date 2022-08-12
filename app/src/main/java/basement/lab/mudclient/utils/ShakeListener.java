@@ -10,19 +10,12 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 public abstract class ShakeListener implements SensorEventListener {
-	private SensorManager sensorManager;
-	private List<Sensor> sensors;
+	private final SensorManager sensorManager;
 	private Sensor sensor;
 	private long lastUpdate = -1;
 	private long lastForce = -1;
 	private long lastShake = -1;
-	private long currentTime = -1;
 	private float last_x, last_y, last_z;
-	private float current_x, current_y, current_z, currenForce;
-
-	private final int DATA_X = SensorManager.DATA_X;
-	private final int DATA_Y = SensorManager.DATA_Y;
-	private final int DATA_Z = SensorManager.DATA_Z;
 
 	private int mShakeCount = 0;
 	private static final int FORCE_THRESHOLD = 900;
@@ -33,7 +26,7 @@ public abstract class ShakeListener implements SensorEventListener {
 	public ShakeListener(Activity parent) {
 		this.sensorManager = (SensorManager) parent
 				.getSystemService(Context.SENSOR_SERVICE);
-		this.sensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+		List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
 		if (sensors.size() > 0) {
 			sensor = sensors.get(0);
 		}
@@ -58,16 +51,19 @@ public abstract class ShakeListener implements SensorEventListener {
 				|| event.values.length < 3)
 			return;
 
-		currentTime = System.currentTimeMillis();
+		long currentTime = System.currentTimeMillis();
 		if (currentTime - lastForce > SHAKE_TIMEOUT) {
 			mShakeCount = 0;
 		}
 		if ((currentTime - lastUpdate) > 100) {
 			long diffTime = (currentTime - lastUpdate);
-			current_x = event.values[DATA_X];
-			current_y = event.values[DATA_Y];
-			current_z = event.values[DATA_Z];
-			currenForce = Math.abs(current_x + current_y + current_z - last_x
+			int DATA_X = SensorManager.DATA_X;
+			float current_x = event.values[DATA_X];
+			int DATA_Y = SensorManager.DATA_Y;
+			float current_y = event.values[DATA_Y];
+			int DATA_Z = SensorManager.DATA_Z;
+			float current_z = event.values[DATA_Z];
+			float currenForce = Math.abs(current_x + current_y + current_z - last_x
 					- last_y - last_z)
 					/ diffTime * 10000;
 			if (currenForce > FORCE_THRESHOLD) {
