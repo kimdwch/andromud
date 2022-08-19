@@ -1,15 +1,15 @@
 package basement.lab.mudclient;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class AliasEditorActivity extends Activity implements OnClickListener {
+public class AliasEditorActivity extends AppCompatActivity implements OnClickListener {
 	public final static int REQUEST_ADD_ALIAS = 100;
 	public final static int RESULT_ADD = 101;
 	public final static int REQUEST_EDIT_ALIAS = 200;

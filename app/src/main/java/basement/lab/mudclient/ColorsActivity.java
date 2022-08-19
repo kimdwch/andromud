@@ -1,32 +1,33 @@
 package basement.lab.mudclient;
 
-import java.util.Arrays;
-import java.util.List;
-
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
+
+import java.util.Arrays;
+import java.util.List;
+
 import basement.lab.mudclient.bean.Colors;
 import basement.lab.mudclient.utils.HostDatabase;
 import basement.lab.mudclient.utils.UberColorPickerDialog;
 import basement.lab.mudclient.utils.UberColorPickerDialog.OnColorChangedListener;
 
-public class ColorsActivity extends Activity implements OnItemClickListener,
+public class ColorsActivity extends AppCompatActivity implements OnItemClickListener,
 		OnColorChangedListener, OnItemSelectedListener {
 	private GridView mColorGrid;
 	private Spinner mFgSpinner;

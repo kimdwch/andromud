@@ -1,16 +1,16 @@
 package basement.lab.mudclient;
 
-import org.connectbot.util.HelpTopicView;
-
-import android.app.Activity;
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ViewFlipper;
 
-public class HelpActivity extends Activity {
+import org.connectbot.util.HelpTopicView;
+
+public class HelpActivity extends AppCompatActivity {
 
 	public final static String HELPDIR = "help";
 	public final static String SUFFIX = ".html";

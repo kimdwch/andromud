@@ -1,33 +1,27 @@
 package basement.lab.mudclient;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Locale;
+public class MenuActivity extends AppCompatActivity implements OnClickListener {
 
-import basement.lab.mudclient.utils.Logger;
-
-public class MenuActivity extends Activity implements OnClickListener {
-
-	private AlertDialog aboutDialog;
+	AlertDialog aboutDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (SettingsManager.isFullScreen(this)) {
+		/*if (SettingsManager.isFullScreen(this)) {
 			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 					WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		}
-		setContentView(basement.lab.mudclient.R.layout.menu);
+		}*/
+		setContentView(R.layout.menu);
 		Button start = findViewById(R.id.start);
 		start.setOnClickListener(this);
 		Button setting = findViewById(R.id.setting);

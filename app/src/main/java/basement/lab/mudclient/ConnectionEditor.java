@@ -1,5 +1,21 @@
 package basement.lab.mudclient;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import android.text.InputType;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import org.openintent.FileManagerIntents;
+
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
@@ -7,25 +23,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.openintent.FileManagerIntents;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.text.InputType;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 import basement.lab.mudclient.bean.ServerInfo;
 
-public class ConnectionEditor extends Activity implements
+public class ConnectionEditor extends AppCompatActivity implements
 		android.view.View.OnClickListener {
 
 	// Constants for AndExplorer's file picking intent

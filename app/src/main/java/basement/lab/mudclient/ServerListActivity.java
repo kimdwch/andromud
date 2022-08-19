@@ -1,22 +1,22 @@
 package basement.lab.mudclient;
 
-import java.util.ArrayList;
-
-import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
+
+import java.util.ArrayList;
+
 import basement.lab.mudclient.bean.ServerInfo;
 import basement.lab.mudclient.utils.ServerInfoAdapter;
 
-public class ServerListActivity extends ListActivity implements
+public class ServerListActivity extends AppCompatActivity implements
 		android.view.View.OnClickListener, OnItemLongClickListener {
 
 	@Override
@@ -43,17 +43,17 @@ public class ServerListActivity extends ListActivity implements
 		newServer.setOnClickListener(this);
 		Button cancel = findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
-		adapter = new ServerInfoAdapter(this);
-		this.setListAdapter(adapter);
-		getListView().setOnItemLongClickListener(this);
+		adapter = new ServerInfoAdapter(ServerListActivity.this);
+		/*this.setListAdapter(adapter);
+		getListView().setOnItemLongClickListener(this);*/
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 		adapter = new ServerInfoAdapter(this);
-		this.setListAdapter(adapter);
-		getListView().setOnItemLongClickListener(this);
+		/*this.setListAdapter(adapter);
+		getListView().setOnItemLongClickListener(this);*/
 		if (adapter.getCount() == 0) {
 			new AlertDialog.Builder(this).setIcon(R.drawable.smallicon)
 					.setTitle(R.string.app_name).setMessage(
@@ -69,14 +69,14 @@ public class ServerListActivity extends ListActivity implements
 		}
 	}
 
-	@Override
+	/*@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent i = new Intent(this, MudTerminalActivity.class);
 		i.putExtra(MudTerminalActivity.Server, SettingsManager.getServerList(
 				this).get(position));
 		startActivity(i);
 		this.finish();
-	}
+	}*/
 
 	public void onClick(View v) {
 		switch (v.getId()) {

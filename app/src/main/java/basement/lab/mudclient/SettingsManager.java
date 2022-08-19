@@ -1,5 +1,14 @@
 package basement.lab.mudclient;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.ListPreference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
+import androidx.appcompat.app.AppCompatActivity;
+import android.view.WindowManager;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -7,14 +16,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
-import android.view.WindowManager;
 import basement.lab.mudclient.bean.ServerInfo;
 
 public class SettingsManager extends PreferenceActivity {
@@ -233,7 +234,7 @@ public class SettingsManager extends PreferenceActivity {
 	private final static String MUD_FILE = "MUD_FILE";
 	private final static String POST_LOGIN = "POST_LOGIN";
 
-	public static ArrayList<ServerInfo> getServerList(Activity ctx) {
+	public static ArrayList<ServerInfo> getServerList(AppCompatActivity ctx) {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
 		int servers = prefs.getInt("SERVER_COUNT", 0);
@@ -247,7 +248,7 @@ public class SettingsManager extends PreferenceActivity {
 		return list;
 	}
 
-	public static void setServerList(Activity ctx, ArrayList<ServerInfo> list) {
+	public static void setServerList(AppCompatActivity ctx, ArrayList<ServerInfo> list) {
 		SharedPreferences.Editor edit = PreferenceManager
 				.getDefaultSharedPreferences(ctx).edit();
 		edit.putInt("SERVER_COUNT", list.size());

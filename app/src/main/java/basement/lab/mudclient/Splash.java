@@ -1,11 +1,10 @@
 package basement.lab.mudclient;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Window;
-import android.view.WindowManager;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -14,7 +13,7 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
-public class Splash extends Activity {
+public class Splash extends AppCompatActivity {
 
 	public final static int SPLASH_DISPLAY_TIME = 3000;
 	private ImageView logo;
@@ -22,10 +21,8 @@ public class Splash extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		this.setContentView(R.layout.splash);
+//		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		new Handler().postDelayed(() -> {
 			Intent mainIntent = new Intent(Splash.this, MenuActivity.class);
 			logo.setAnimation(null);

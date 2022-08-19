@@ -1,13 +1,5 @@
 package basement.lab.mudclient;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -20,6 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -27,13 +21,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
-import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,7 +36,13 @@ import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
 import basement.lab.mudclient.bean.ScriptEngine;
 import basement.lab.mudclient.bean.ServerInfo;
 import basement.lab.mudclient.bean.SessionData;
@@ -50,7 +50,7 @@ import basement.lab.mudclient.bean.TriggerEngine;
 import basement.lab.mudclient.utils.ShakeListener;
 import basement.lab.mudclient.utils.TerminalView;
 
-public class MudTerminalActivity extends Activity implements OnClickListener {
+public class MudTerminalActivity extends AppCompatActivity implements OnClickListener {
 	public static final String Server = "basement.lab.mudclient.serverinfo";
 	public static final String TAG = "mudclient.MudTerminal";
 
@@ -125,7 +125,7 @@ public class MudTerminalActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		PowerManager manager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		wakelock = manager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, TAG);
+		wakelock = manager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
 
 		notifier = (NotificationManager) this
 				.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -285,20 +285,25 @@ public class MudTerminalActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	@Override
+	/*@Override
 	public Object onRetainNonConfigurationInstance() {
+
+		return session;
+	}*/
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 		container.removeAllViews();
-		SessionData session = new SessionData();
+		/*Parcel data = new Parcel();
+
+		SessionData session = new SessionData(data);
 		session.connection = connectionThread;
 		session.queue = sendData;
 		session.commandHistory = commandHistory;
 		session.server = server;
 		session.terminal = this.terminal;
-		return session;
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+		outState.putParcelable("SESSION",session);*/
 		outState.putString("INPUT_TEXT", inputBuffer);
 	}
 

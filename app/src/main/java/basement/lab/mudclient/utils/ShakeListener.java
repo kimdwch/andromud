@@ -1,13 +1,13 @@
 package basement.lab.mudclient.utils;
 
-import java.util.List;
-
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.List;
 
 public abstract class ShakeListener implements SensorEventListener {
 	private final SensorManager sensorManager;
@@ -23,7 +23,7 @@ public abstract class ShakeListener implements SensorEventListener {
 	private final static long SHAKE_DURATION = 1000;
 	private final static int SHAKE_COUNT = 3;
 
-	public ShakeListener(Activity parent) {
+	public ShakeListener(AppCompatActivity parent) {
 		this.sensorManager = (SensorManager) parent
 				.getSystemService(Context.SENSOR_SERVICE);
 		List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);

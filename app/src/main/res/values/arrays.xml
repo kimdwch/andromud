@@ -2,9 +2,9 @@
 	<string-array name="list_help_topics">
 		<item>Generals</item>
 		<item>MetaCommands</item>
-		<item>Alias</item>
-		<item>Trigger</item>
-		<item>ShortcutKeys</item>
+		<item>줄임말</item>
+		<item>자동반응</item>
+		<item>단축키</item>
 		<item>PostLogin</item>
 	</string-array>
 </resources>

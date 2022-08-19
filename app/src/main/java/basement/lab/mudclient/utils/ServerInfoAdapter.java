@@ -1,13 +1,14 @@
 package basement.lab.mudclient.utils;
 
-import java.util.ArrayList;
-
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
 import basement.lab.mudclient.R;
 import basement.lab.mudclient.SettingsManager;
 import basement.lab.mudclient.bean.ServerInfo;
@@ -15,9 +16,9 @@ import basement.lab.mudclient.bean.ServerInfo;
 public class ServerInfoAdapter extends BaseAdapter {
 
 	ArrayList<ServerInfo> servers;
-	Activity ctx;
+	AppCompatActivity ctx;
 
-	public ServerInfoAdapter(Activity ctx) {
+	public ServerInfoAdapter(AppCompatActivity ctx) {
 		servers = SettingsManager.getServerList(ctx);
 		this.ctx = ctx;
 	}

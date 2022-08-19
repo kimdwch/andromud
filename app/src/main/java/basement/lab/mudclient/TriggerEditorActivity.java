@@ -1,20 +1,21 @@
 package basement.lab.mudclient;
 
-import java.util.ArrayList;
-
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+
 import basement.lab.mudclient.bean.ScriptEngine;
 import basement.lab.mudclient.bean.Trigger;
 
-public class TriggerEditorActivity extends Activity implements OnClickListener {
+public class TriggerEditorActivity extends AppCompatActivity implements OnClickListener {
 
 	public final static String TRIGGER_POSITION = "B.L.M.TRIGGER_POSITION";
 	public final static String REQUEST_TYPE = "B.L.M.TRIGGER_EDIT_TYPE";

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="versionName">버전:</string>
-	<string name="app_name">안드로머드</string>
-	<string name="splashstr1">안드로머드</string>
+	<string name="versionName">Version Number:1.2.2</string>
+	<string name="app_name">AndroMud</string>
+	<string name="splashstr1">AndroMud</string>
 	<string name="splashstr2">Basement Lab Production</string>
 	<string name="splashstr3">\@ 2010</string>
 	<string name="new_server">New Server</string>
-	<string name="cancel">취소</string>
-	<string name="start">시작</string>
-	<string name="setting">설정</string>
-	<string name="help">도움말</string>
+	<string name="cancel">Cancel</string>
+	<string name="start">Start</string>
+	<string name="setting">Setting</string>
+	<string name="help">Help</string>
 	<string name="about">About</string>
-	<string name="exit">종료</string>
-	<string name="save">저장</string>
+	<string name="exit">Exit</string>
+	<string name="save">Save</string>
 	<string name="add">Add</string>
 	<string name="enterserverinfo">Enter Server Information</string>
 
@@ -22,20 +22,20 @@
 	<string name="mudfile">Mud File:</string>
 
 	<string name="editserver">Edit Server Information</string>
-	<string name="modify">수정</string>
-	<string name="delete">삭제</string>
+	<string name="modify">Modify</string>
+	<string name="delete">Delete</string>
 	<string name="serverlist">Server List</string>
 	<string name="portmustbenumber">Port value must be a number.</string>
-	<string name="reconnect">재접속</string>
-	<string name="disconnect">연결 끊기</string>
+	<string name="reconnect">Reconnect</string>
+	<string name="disconnect">Disconnect</string>
 	<string name="pref_cmdhistory_title">Command Buffer</string>
 	<string name="pref_cmdhistory_summary">Number of commands you can back track.</string>
 	<string name="pref_screenbuffer_title">Screen Buffer</string>
 	<string name="pref_screenbuffer_summary">Screen Text Buffer. Bigger buffer can hold more
 		text but slower.</string>
-	<string name="pref_fontsize_title">글자크기</string>
+	<string name="pref_fontsize_title">Font Size</string>
 	<string name="pref_fontsize_summary">Character Size for connections.</string>
-	<string name="pref_fullscreen_title">전체화면</string>
+	<string name="pref_fullscreen_title">Full Screen</string>
 	<string name="pref_fullscreen_summary">Full Screen Display</string>
 	<string name="pref_encoding_title">Encoding</string>
 	<string name="pref_encoding_summary">Character encoding for connections.</string>
