@@ -90,43 +90,46 @@ public class ServerListActivity extends AppCompatActivity implements
                 finish();
                 break;
         }
-
-
-        public boolean onItemLongClick (AdapterView < ? > arg0, View view,
-        int position, long id){
-            contextSelect = position;
-            AlertDialog alert = new AlertDialog.Builder(this).setIcon(R.drawable.smallicon)
-                    .setTitle(R.string.editserver).setPositiveButton(
-                            R.string.modify, new OnClickListener() {
-                                public void onClick(DialogInterface dialog,
-                                                    int whichButton) {
-                                    Intent i = new Intent(ServerListActivity.this,
-                                            ConnectionEditor.class);
-                                    i.putExtra(EDIT_SERVER_POSITION, contextSelect);
-                                    startActivityForResult(i, REQUEST_EDIT_SERVER);
-                                }
-                            }).setNegativeButton(R.string.delete,
-                            new OnClickListener() {
-                                public void onClick(DialogInterface dialog,
-                                                    int whichButton) {
-                                    ArrayList<ServerInfo> list = SettingsManager
-                                            .getServerList(ServerListActivity.this);
-                                    list.remove(contextSelect);
-                                    SettingsManager.setServerList(
-                                            ServerListActivity.this, list);
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }).create();
-            alert.show();
-            return true;
-        }
-
-        private void createDefaultServerList () {
-            ArrayList<ServerInfo> list = new ArrayList<ServerInfo>();
-            list.add(new ServerInfo("무검(십웅기)", "toox.co.kr", 8050, null, ""));
-            list.add(new ServerInfo("십웅기검하천산", "27.102.207.232", 9999, null, ""));
-            list.add(new ServerInfo("승풍파랑", "sppr.kr", 5050, null, ""));
-            list.add(new ServerInfo("넓은마을 마법의대륙", "221.146.75.32", 4001, null, ""));
-            SettingsManager.setServerList(this, list);
-        }
     }
+
+    private void createDefaultServerList() {
+        ArrayList<ServerInfo> list = new ArrayList<ServerInfo>();
+        list.add(new ServerInfo("무검(십웅기)", "toox.co.kr", 8050, null, ""));
+        list.add(new ServerInfo("십웅기검하천산", "27.102.207.232", 9999, null, ""));
+        list.add(new ServerInfo("승풍파랑", "sppr.kr", 5050, null, ""));
+        list.add(new ServerInfo("넓은마을 마법의대륙", "221.146.75.32", 4001, null, ""));
+        SettingsManager.setServerList(this, list);
+    }
+    @Override
+    public boolean onItemLongClick (AdapterView < ? > arg0, View view, int position, long id){
+        contextSelect = position;
+        AlertDialog alert = new AlertDialog.Builder(this).setIcon(R.drawable.smallicon)
+                .setTitle(R.string.editserver).setPositiveButton(
+                        R.string.modify, new OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                                int whichButton) {
+                                Intent i = new Intent(ServerListActivity.this,
+                                        ConnectionEditor.class);
+                                i.putExtra(EDIT_SERVER_POSITION, contextSelect);
+                                startActivityForResult(i, REQUEST_EDIT_SERVER);
+                            }
+                        }).setNegativeButton(R.string.delete,
+                        new OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                                int whichButton) {
+                                ArrayList<ServerInfo> list = SettingsManager
+                                        .getServerList(ServerListActivity.this);
+                                list.remove(contextSelect);
+                                SettingsManager.setServerList(
+                                        ServerListActivity.this, list);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }).create();
+        alert.show();
+        return true;
+    }
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
+}

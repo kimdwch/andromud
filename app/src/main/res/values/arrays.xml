@@ -1,6 +1,6 @@
 <resources>
 	<string-array name="list_help_topics">
-		<item>Generals</item>
+		<item>기본</item>
 		<item>MetaCommands</item>
 		<item>줄임말</item>
 		<item>자동반응</item>
