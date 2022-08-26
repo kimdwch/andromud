@@ -2,12 +2,13 @@ package basement.lab.mudclient;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class AliasEditorActivity extends AppCompatActivity implements OnClickListener {
 	public final static int REQUEST_ADD_ALIAS = 100;
@@ -20,7 +21,6 @@ public class AliasEditorActivity extends AppCompatActivity implements OnClickLis
 	public final static String TITLE = "aliasTitle";
 	public final static String BODY = "aliasBody";
 
-	private Button save, delete;
 	private EditText name;
 	private EditText body;
 
@@ -31,9 +31,9 @@ public class AliasEditorActivity extends AppCompatActivity implements OnClickLis
 		super.onCreate(savedInstanceState);
 		setTitle(R.string.aliaseditor);
 		setContentView(R.layout.aliaseditbox);
-		save = (Button) findViewById(R.id.save);
+		Button save = (Button) findViewById(R.id.save);
 		save.setOnClickListener(this);
-		delete = (Button) findViewById(R.id.delete);
+		Button delete = (Button) findViewById(R.id.delete);
 		delete.setOnClickListener(this);
 		name = (EditText) findViewById(R.id.aliasname);
 		body = (EditText) findViewById(R.id.aliasbody);
@@ -57,12 +57,14 @@ public class AliasEditorActivity extends AppCompatActivity implements OnClickLis
 
 	public void onClick(View v) {
 		Intent i = new Intent();
-		switch (v.getId()) {
-		case R.id.save:
+		int resId = v.getId();
+
+		if(resId == R.id.save)
+		{
 			String n = name.getText().toString();
 			String b = body.getText().toString();
 			if (n.length() == 0 || b.length() == 0) {
-				Toast.makeText(this, R.string.editorerr, 0).show();
+				Toast.makeText(this, R.string.editorerr, Toast.LENGTH_SHORT).show();
 				return;
 			}
 			i.putExtra(TITLE, n);
@@ -72,15 +74,14 @@ public class AliasEditorActivity extends AppCompatActivity implements OnClickLis
 			else
 				setResult(RESULT_EDIT, i);
 			finish();
-		case R.id.delete:
-			if (requestCode == REQUEST_ADD_ALIAS) {
-				finish();
-			} else {
+		}
+		else if(resId == R.id.delete)
+		{
+			if (requestCode != REQUEST_ADD_ALIAS) {
 				i.putExtra(TITLE, name.getText().toString());
 				setResult(RESULT_DELETE, i);
-				finish();
 			}
-			break;
+			finish();
 		}
 	}
 }
