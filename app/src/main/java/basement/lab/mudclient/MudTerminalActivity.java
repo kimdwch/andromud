@@ -87,7 +87,7 @@ public class MudTerminalActivity extends AppCompatActivity implements OnClickLis
 
     private Thread connectionThread = null;
     private TelnetConnectionThread telnet = null;
-    private PowerManager.WakeLock wakelock = null;
+//    private PowerManager.WakeLock wakelock = null;
     private NotificationManager notifier;
     final GestureDetector detect = new GestureDetector(
             new GestureDetector.SimpleOnGestureListener() {
@@ -125,8 +125,8 @@ public class MudTerminalActivity extends AppCompatActivity implements OnClickLis
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        PowerManager manager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wakelock = manager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+        /*PowerManager manager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakelock = manager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);*/
 
         if(SettingsManager.getOrientation(this))
             setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -213,10 +213,10 @@ public class MudTerminalActivity extends AppCompatActivity implements OnClickLis
                 Toast.makeText(this, R.string.error_unableFindServer, Toast.LENGTH_SHORT).show();
             }
         }
-        if (wakelock != null && SettingsManager.isKeepAwake(this)) {
+        /*if (wakelock != null && SettingsManager.isKeepAwake(this)) {
             Log.d(TAG, "screen lock acquired.");
             wakelock.acquire();
-        }
+        }*/
         logPath = SettingsManager.getLogPath(this);
         if (SettingsManager.isShakeForURL(this)) {
             shaker = new ShakeListener(this) {
@@ -257,10 +257,10 @@ public class MudTerminalActivity extends AppCompatActivity implements OnClickLis
     public void onStop() {
         super.onStop();
         // allow the screen to dim and fall asleep
-        if (wakelock != null && wakelock.isHeld()) {
+        /*if (wakelock != null && wakelock.isHeld()) {
             Log.d(TAG, "screen lock released.");
             wakelock.release();
-        }
+        }*/
         if (isLogging) {
             isLogging = false;
             terminal.requestLog(null, false);
