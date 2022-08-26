@@ -66,6 +66,9 @@
 	<string name="pref_postlogin_as_password_summary">Hide text in post login setup box. This helps
 		protect your password.</string>
 
+	<string name="terminalland">화면 방향 설정</string>
+	<string name="terminalorip">MUD 실행시 화면을 세로로 실행 합니다.</string>
+	<string name="terminaloril">MUD 실행시 화면을 가로로 실행 합니다.</string>
 
 	<string name="menu_colors_reset">Reset</string>
 	<string name="color_setting">Colors</string>
