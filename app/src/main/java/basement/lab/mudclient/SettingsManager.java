@@ -48,7 +48,7 @@ public class SettingsManager extends PreferenceActivity {
 	private static final int defaultCommandHistory = 20;
 
 	private static final String fontSize = "fontsize";
-	private static final int defaultFontSize = 11;
+	private static final int defaultFontSize = 25;
 
 	private static final String encoding = "encoding";
 	private static final String defaultEncoding = "EUC-KR";
@@ -68,6 +68,9 @@ public class SettingsManager extends PreferenceActivity {
 	private static final boolean defaultPostLoginAsPassword = true;
 	private static final boolean defaultUsePostLogin = false;
 
+	private static final String orintation ="telnetorien";
+	private static final boolean defaultori = true;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -84,11 +87,7 @@ public class SettingsManager extends PreferenceActivity {
 			currentCharsetPref[0] = charsetPref.getValue();
 			charsetPref.setEntryValues(currentCharsetPref);
 			charsetPref.setEntries(currentCharsetPref);
-			new Thread(new Runnable() {
-				public void run() {
-					initCharsetPref(charsetPref);
-				}
-			}).start();
+			new Thread(() -> initCharsetPref(charsetPref)).start();
 		}
 	}
 
@@ -172,6 +171,12 @@ public class SettingsManager extends PreferenceActivity {
 				logPath, defaultLogPath);
 	}
 
+	public static boolean getOrientation(Context ctx)
+	{
+		return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(
+				orintation, defaultori);
+	}
+
 	public static class CharsetHolder {
 		private static boolean initialized = false;
 
@@ -234,7 +239,7 @@ public class SettingsManager extends PreferenceActivity {
 	private final static String MUD_FILE = "MUD_FILE";
 	private final static String POST_LOGIN = "POST_LOGIN";
 
-	public static ArrayList<ServerInfo> getServerList(AppCompatActivity ctx) {
+	public static ArrayList<ServerInfo> getServerList(Context ctx) {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
 		int servers = prefs.getInt("SERVER_COUNT", 0);

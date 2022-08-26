@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ScrollView01"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
 
         <TextView
             android:id="@+id/NameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/nickname"></TextView>
+            android:text="@string/nickname" />
 
         <EditText
             android:id="@+id/NameValue"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/NameText"></EditText>
+            android:layout_toRightOf="@+id/NameText" />
 
         <TextView
             android:id="@+id/HostText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/NameValue"
-            android:text="@string/host"></TextView>
+            android:text="@string/host" />
 
         <EditText
             android:id="@+id/HostValue"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/NameValue"
-            android:layout_alignLeft="@+id/NameValue"
-            android:layout_toRightOf="@+id/HostText"
+            android:layout_alignStart="@+id/NameValue"
+            android:layout_toEndOf="@+id/HostText"
             android:singleLine="true" />
 
         <TextView
@@ -45,11 +46,11 @@
 
         <EditText
             android:id="@+id/PortValue"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/HostValue"
-            android:layout_alignLeft="@+id/HostValue"
-            android:layout_toRightOf="@+id/PortText"
+            android:layout_alignStart="@+id/HostValue"
+            android:layout_toEndOf="@+id/PortText"
             android:inputType="number"
             android:singleLine="true" />
 
@@ -62,18 +63,16 @@
 
         <LinearLayout
             android:id="@+id/LinearLayout01"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/PortValue"
-            android:layout_alignLeft="@+id/HostValue"
+            android:layout_alignStart="@+id/HostValue"
             android:layout_toRightOf="@+id/MudfileText">
 
             <EditText
                 android:id="@+id/filepath"
-                android:layout_width="fill_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/PortValue"
-                android:layout_toRightOf="@+id/MudfileText"
                 android:layout_weight="1" />
 
             <Button
@@ -88,7 +87,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/LinearLayout01"
-            android:layout_toRightOf="@+id/more"
             android:text="@string/postLogin" />
 
         <EditText
@@ -96,14 +94,13 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/LinearLayout01"
-            android:layout_toRightOf="@+id/postLoginText" />
+            android:layout_toEndOf="@+id/postLoginText" />
 
         <Button
             android:id="@+id/SaveButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/postLoginValue"
-            android:layout_toRightOf="@+id/more"
             android:text="@string/save" />
     </RelativeLayout>
 </ScrollView>

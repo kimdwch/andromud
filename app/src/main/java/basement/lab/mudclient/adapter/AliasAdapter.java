@@ -1,4 +1,4 @@
-package basement.lab.mudclient.utils;
+package basement.lab.mudclient.adapter;
 
 import java.util.ArrayList;
 import java.util.Set;

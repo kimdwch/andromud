@@ -11,6 +11,13 @@
             android:key="wake"
             android:summary="@string/pref_term_wake_summary"
             android:title="@string/pref_term_wake_title" />
+        <SwitchPreference
+            android:title="@string/terminalland"
+            android:defaultValue="true"
+            android:key="telnetorien"
+            android:summaryOn="@string/terminalorip"
+            android:summaryOff="@string/terminaloril"
+            />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="wifi"
@@ -70,7 +77,7 @@
             android:summary="@string/pref_fontsize_summary"
             android:title="@string/pref_fontsize_title" />
         <ListPreference
-            android:defaultValue="UTF-8"
+            android:defaultValue="EUC-KR"
             android:key="encoding"
             android:summary="@string/pref_encoding_summary"
             android:title="@string/pref_encoding_title" />

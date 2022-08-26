@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import basement.lab.mudclient.adapter.ServerInfoAdapter;
 import basement.lab.mudclient.bean.ServerInfo;
 
 public class ConnectionEditor extends AppCompatActivity implements
@@ -56,7 +57,7 @@ public class ConnectionEditor extends AppCompatActivity implements
 		filepath = findViewById(R.id.filepath);
 		saveButton.setOnClickListener(this);
 		Intent i = getIntent();
-		position = i.getIntExtra(ServerListActivity.EDIT_SERVER_POSITION, -1);
+		position = i.getIntExtra(ServerInfoAdapter.EDIT_SERVER_POSITION, -1);
 		list = SettingsManager.getServerList(this);
 		if (position != -1) {
 			NameEdit.setText(list.get(position).nickName);
@@ -129,7 +130,7 @@ public class ConnectionEditor extends AppCompatActivity implements
 				}
 			}
 			SettingsManager.setServerList(this, list);
-			this.setResult(ServerListActivity.REQUEST_EDIT_SERVER);
+			this.setResult(ServerInfoAdapter.REQUEST_EDIT_SERVER);
 			this.finish();
 			break;
 		}

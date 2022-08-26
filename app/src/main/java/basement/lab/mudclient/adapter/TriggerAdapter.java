@@ -1,4 +1,4 @@
-package basement.lab.mudclient.utils;
+package basement.lab.mudclient.adapter;
 
 import basement.lab.mudclient.R;
 import basement.lab.mudclient.bean.ScriptEngine;

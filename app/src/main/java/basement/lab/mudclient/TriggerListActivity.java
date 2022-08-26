@@ -14,7 +14,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import basement.lab.mudclient.bean.ScriptEngine;
 import basement.lab.mudclient.bean.TriggerEngine;
-import basement.lab.mudclient.utils.TriggerAdapter;
+import basement.lab.mudclient.adapter.TriggerAdapter;
 
 public class TriggerListActivity extends ListActivity implements
 		OnClickListener, OnItemClickListener {

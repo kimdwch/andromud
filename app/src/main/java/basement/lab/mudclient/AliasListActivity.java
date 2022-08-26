@@ -13,7 +13,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import basement.lab.mudclient.bean.Alias;
 import basement.lab.mudclient.bean.ScriptEngine;
-import basement.lab.mudclient.utils.AliasAdapter;
+import basement.lab.mudclient.adapter.AliasAdapter;
 
 public class AliasListActivity extends ListActivity implements OnClickListener,
 		OnItemClickListener {

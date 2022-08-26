@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class MenuActivity extends AppCompatActivity implements OnClickListener {
 
@@ -18,10 +19,15 @@ public class MenuActivity extends AppCompatActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		/*if (SettingsManager.isFullScreen(this)) {
-			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,a
 					WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}*/
+
 		setContentView(R.layout.menu);
+
+		/*Toolbar toolbar = findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);*/
+
 		Button start = findViewById(R.id.start);
 		start.setOnClickListener(this);
 		Button setting = findViewById(R.id.setting);
